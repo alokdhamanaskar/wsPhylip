@@ -31,7 +31,7 @@ public class protdist
         {
             
             //Create a new Directory for Current request in tmp folder
-            String dirName = "/home/alok/NetBeansProjects/PhylipWS/tmp/" + UUID.randomUUID().toString() + "Protdist";            
+            String dirName = "tmp/" + UUID.randomUUID().toString() + "Protdist";            
             boolean success = (new File(dirName)).mkdir();
             if (success) 
                 System.out.println("Directory: " + dirName + " created");
@@ -43,18 +43,7 @@ public class protdist
             
             //Create .sh file in the newly created Dir
             String partCode = "Y\n";
-//            if (consensusType.equalsIgnoreCase("MRe"))
-//                partCode = "R\nY\n";
-//            else if (consensusType.equalsIgnoreCase("Strict"))
-//                partCode = "C\nR\nY\n";
-//            else if (consensusType.equalsIgnoreCase("MR"))
-//                partCode = "C\nC\nR\nY\n";
-//            else if (consensusType.equalsIgnoreCase("Ml"))
-//                partCode = "C\nC\nC\nR\nY\n0.5\n";                
-//            else
-//                return "consensusType takes only following values:\n"
-//                        + "MRe : Majority rule (extended)\n, strict,\n MR : Majority rule,\n Ml";
-            
+           
             String code = "#!/bin/bash\n"
                     + "cd "+ dirName + "\n"
                     + "phylip protdist <<EOD\n"
@@ -103,7 +92,7 @@ public class protdist
         
         String query = "";
         
-        FileInputStream fstream = new FileInputStream("/home/alok/Desktop/PhylipSampleInputs/protdist.txt");
+        FileInputStream fstream = new FileInputStream("/home/alok/Desktop/tmp/PhylipSampleInputs/protdist.txt");
         DataInputStream in = new DataInputStream(fstream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String strLine;

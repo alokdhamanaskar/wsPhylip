@@ -20,12 +20,13 @@ public class consense
         {
             
             //Create a new Directory for Current request in tmp folder
-            String dirName = "/home/alok/NetBeansProjects/PhylipWS/tmp/" + UUID.randomUUID().toString() + "Consense";            
-            boolean success = (new File(dirName)).mkdir();
+            String dirName = "PhylipConsense:" + UUID.randomUUID().toString();            
+            String dirNamePath = "tmp/" + dirName;  
+            boolean success = (new File(dirNamePath)).mkdir();
             if (success) 
-                System.out.println("Directory: " + dirName + " created");
+                System.out.println("Directory: " + dirNamePath + " created");
                         
-            FileWriter f = new FileWriter(dirName + "/query.txt");
+            FileWriter f = new FileWriter(dirNamePath + "/query.txt");
             BufferedWriter w = new BufferedWriter(f);
             w.write(query);            
             w.close();
@@ -45,53 +46,25 @@ public class consense
                         + "MRe : Majority rule (extended)\n, strict,\n MR : Majority rule,\n Ml";
             
             String code = "#!/bin/bash\n"
-                    + "cd "+ dirName + "\n"
+                    + "cd "+ dirNamePath + "\n"
                     + "phylip consense <<EOD\n"
                     + "query.txt\n"
                     + partCode
                     + "EOD";         
 
-            f = new FileWriter(dirName + "/consense.sh");
+            f = new FileWriter(dirNamePath + "/consense.sh");
             BufferedWriter ww = new BufferedWriter(f);
             ww.write(code);            
             ww.close();
 
-            Process p = rt.exec("sh "+dirName+"/consense.sh");
-
-            if (!jobFinished.CheckStatus(dirName))
-                return "Unable to run Phylip consense\n Check Your parameters and try again later\n";
-            
-            FileInputStream fstream = new FileInputStream(dirName + "/outtree");
-            DataInputStream in = new DataInputStream(fstream);
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            String s="";
-            output = "<outTree>\n";
-              
-            while ((s = br.readLine()) != null)   
-            {
-               output += s + "\n";
-            }
-                    output += "</outTree>\n";
-                    in.close();
-                    
-                    fstream = new FileInputStream(dirName + "/outfile");
-                    in = new DataInputStream(fstream);
-                    br = new BufferedReader(new InputStreamReader(in));
-                    s="";
-                    output += "<outFile>\n";
-                    
-                    while ((s = br.readLine()) != null)   
-                    {
-                        output += s + "\n";
-                    }
-                    output += "</outFile>\n";
-                    in.close();
-              
-            return output;
+            Process p = rt.exec("sh "+dirNamePath+"/consense.sh");
+         
+            return dirName;
             
         } catch (Exception ex)
         {
-            return "Program failed due to : " + ex;
+            System.out.println("Program failed due to : " + ex);
+            return "Unexpected Error occured at server.";
         }
         
         
@@ -101,80 +74,53 @@ public class consense
     public static String consenseNonRootedTrees
             (String query, String consensusType, String OutgroupRoot, int nofOutgroup)
     {
-       
-        
        Runtime rt = Runtime.getRuntime();
-       String output = "";
         try
         {
-            
             //Create a new Directory for Current request in tmp folder
-            String dirName = "/home/alok/NetBeansProjects/PhylipWS/tmp/" + UUID.randomUUID().toString() + "Consense";            
-            boolean success = (new File(dirName)).mkdir();
+            String dirName = "PhylipConsense:" + UUID.randomUUID().toString();            
+            String dirNamePath = "tmp/" + dirName;            
+            boolean success = (new File(dirNamePath)).mkdir();
             if (success) 
-                System.out.println("Directory: " + dirName + " created");
+                System.out.println("Directory: " + dirNamePath + " created");
+            else
+            {
+                System.out.println("Directory: " + dirNamePath + " Could not be created");
+                return "Unexpected Error occured at server.";
+            }
                         
-            FileWriter f = new FileWriter(dirName + "/query.txt");
+            FileWriter f = new FileWriter(dirNamePath + "/query.txt");
             BufferedWriter w = new BufferedWriter(f);
             w.write(query);            
             w.close();
             
             //Create .sh file in the newly created Dir
             String partCode = "";
-
             
             partCode = consense.getCodeNonRootedTrees(consensusType, OutgroupRoot, nofOutgroup);
             if (partCode.contains("Error :"))
                return partCode;     
             
             String code = "#!/bin/bash\n"
-                    + "cd "+ dirName + "\n"
+                    + "cd "+ dirNamePath + "\n"
                     + "phylip consense <<EOD\n"
                     + "query.txt\n"
                     + partCode
                     + "EOD";         
 
-            f = new FileWriter(dirName + "/consense.sh");
+            f = new FileWriter(dirNamePath + "/consense.sh");
             BufferedWriter ww = new BufferedWriter(f);
             ww.write(code);            
             ww.close();
 
-            Process p = rt.exec("sh "+dirName+"/consense.sh");
-
-            if (!jobFinished.CheckStatus(dirName))
-                return "Unable to run Phylip consense \n Check Your parameters and try again later\n";
-
-            FileInputStream fstream = new FileInputStream(dirName + "/outtree");
-            DataInputStream in = new DataInputStream(fstream);
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            String s="";
-            output = "<outTree>\n";
+            Process p = rt.exec("sh "+dirNamePath+"/consense.sh");
               
-            while ((s = br.readLine()) != null)   
-            {
-               output += s + "\n";
-            }
-                    output += "</outTree>\n";
-                    in.close();
-                    
-                    fstream = new FileInputStream(dirName + "/outfile");
-                    in = new DataInputStream(fstream);
-                    br = new BufferedReader(new InputStreamReader(in));
-                    s="";
-                    output += "<outFile>\n";
-                    
-                    while ((s = br.readLine()) != null)   
-                    {
-                        output += s + "\n";
-                    }
-                    output += "</outFree>\n";
-                    in.close();
-              
-            return output;
+            return dirName;
             
         } catch (Exception ex)
         {
-            return "Program failed due to : " + ex;
+            System.out.println("Program failed due to : " + ex);
+            return "Unexpected Error occured at server.";
         }
         
         
@@ -221,7 +167,7 @@ public class consense
         
         String query = "";
         
-        FileInputStream fstream = new FileInputStream("/home/alok/Desktop/PhylipSampleInputs/consense.txt");
+        FileInputStream fstream = new FileInputStream("/home/alok/Desktop/tmp/PhylipSampleInputs/consense.txt");
         DataInputStream in = new DataInputStream(fstream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String strLine;
@@ -234,8 +180,8 @@ public class consense
         //System.out.println(query);
         
         //System.out.println(consense.consenseRootedTrees(query, "Strict"));
-        //System.out.println(consense.consenseRootedTrees(query, "mr"));
-        System.out.println(consense.consenseNonRootedTrees(query, "strict", "yes",1));
+        System.out.println(consense.consenseRootedTrees(query, "mr"));
+        //System.out.println(consense.consenseNonRootedTrees(query, "strict", "yes",1));
         
 
     }

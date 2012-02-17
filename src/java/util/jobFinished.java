@@ -4,8 +4,8 @@
  */
 package util;
 
-import java.io.File;
 
+import java.io.*;
 /**
  *
  * @author Alok Dhamanaskar
@@ -33,9 +33,10 @@ public class jobFinished
         return true;
     }
     
-        public static boolean CheckStatusOutfile(String dirName) throws InterruptedException
+        public static boolean CheckStatusOutfile(String dirName) throws InterruptedException, FileNotFoundException, IOException
     {
             File file1 = new File(dirName + "/outfile");
+            String check="";
             boolean exists1= file1.exists();
             int sleepTime = 50, tryCount = 0;
             
@@ -47,7 +48,25 @@ public class jobFinished
                 if (++tryCount > 10)
                     return false;
             }
-        return true;
+            System.out.println(tryCount);
+            sleepTime = 50;
+            tryCount = 0;
+            FileInputStream fstream = new FileInputStream(file1);
+            DataInputStream in = new DataInputStream(fstream);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            String s="";
+              
+            while ((br.readLine()) == null)   
+            {
+                sleepTime = sleepTime * 2;
+                Thread.sleep(sleepTime);                
+                exists1 = file1.exists();
+                if (++tryCount > 5)
+                    return false;
+            }
+            System.out.println(tryCount);
+
+            return true;
     }
     
 }
