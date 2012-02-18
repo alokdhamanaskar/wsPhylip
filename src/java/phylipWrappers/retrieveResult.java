@@ -20,7 +20,7 @@ public class retrieveResult
     {
         String output = "error";
 
-        String outcome =checkJobStatus.CheckStatus(dirName);
+        String outcome = checkJobStatus.CheckStatus(dirName);
         if (outcome.equalsIgnoreCase("FINISHED"))
         {
             if (dirName.contains("PhylipConsense"))
@@ -40,7 +40,7 @@ public class retrieveResult
                     output += "</outTree>\n";
                     in.close();
 
-                    fstream = new FileInputStream("tmp/"+ dirName + "/outfile");
+                    fstream = new FileInputStream("tmp/" + dirName + "/outfile");
                     in = new DataInputStream(fstream);
                     br = new BufferedReader(new InputStreamReader(in));
                     s = "";
@@ -54,14 +54,36 @@ public class retrieveResult
                     in.close();
                 } catch (Exception e)
                 {
-                    System.out.println("Exception Occurred "+ e);
+                    System.out.println("Exception Occurred " + e);
                     output = "There was an error running this job";
                 }
 
 
 
-            } else //if (dirName.contains("PhylipConsense"))
+            } else if (dirName.contains("PhylipProtdist"))
             {
+                try
+                {
+                    FileInputStream fstream = new FileInputStream("tmp/" + dirName + "/outfile");
+                    DataInputStream in = new DataInputStream(fstream);
+                    BufferedReader br = new BufferedReader(new InputStreamReader(in));
+                    String s = "";
+                    output = "<outFile>\n";
+
+                    while ((s = br.readLine()) != null)
+                    {
+                        output += s + "\n";
+                    }
+                    output += "</outFile>\n";
+                    in.close();
+
+                    in.close();
+                } catch (Exception e)
+                {
+                    System.out.println("Exception Occurred " + e);
+                    output = "There was an error running this job";
+                }
+
             }
 
         } else if (outcome.equalsIgnoreCase("ERROR"))
@@ -70,17 +92,17 @@ public class retrieveResult
         } else if (outcome.equalsIgnoreCase("RUNNING"))
         {
             output = "The job is still running";
-        }
-        else
+        } else
+        {
             output = outcome;
+        }
 
         return output;
     }//method retrieveResult1 ends
-    
-    public static void main (String[] args)
+
+    public static void main(String[] args)
     {
-        System.out.println(retrieveResult.retrieveResult1("PhylipConsense:51447f9c-fce5-4f8b-9473-4e8a2004a6fe"));    
+        System.out.println(retrieveResult.retrieveResult1("PhylipProtdist:252eb89d-7d53-406c-b26a-2f0d1f57ce5d"));
     }//main ends
-    
 }//Class ends
 

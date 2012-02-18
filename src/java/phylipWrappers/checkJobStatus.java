@@ -34,9 +34,12 @@ public class checkJobStatus
                 else
                     status = "RUNNING";
             }
-            else //if (dirName.contains("PhylipConsense"))
+            else if (dirName.contains("PhylipProtdist"))
             {
-                          status = "SUCCESS";
+                if (exists2 == true )
+                    status = "FINISHED";
+                else
+                    status = "RUNNING";
             }           
         }
         return status;

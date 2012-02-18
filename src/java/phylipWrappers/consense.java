@@ -3,7 +3,6 @@ package phylipWrappers;
 
 import java.io.*;
 import java.util.UUID;
-import util.jobFinished;
 
 /**
  *
@@ -67,8 +66,8 @@ public class consense
             return "Unexpected Error occured at server.";
         }
         
-        
     }
+
 
     
     public static String consenseNonRootedTrees
