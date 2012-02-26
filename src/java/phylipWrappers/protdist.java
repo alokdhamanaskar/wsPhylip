@@ -21,7 +21,11 @@ import java.util.UUID;
  */
 public class protdist
 {
-
+    
+    public static String errorMsg="";
+    public static String partCodeG = "";
+    public static String restCode = "";
+    
     public static String protdistDefaultParameters(String query, String model)
     {
 
@@ -100,29 +104,25 @@ public class protdist
 
     public static boolean verify(String model, String GammaDistrOfRates,
             double CoeffOfVariation, double fracOfInvSites, String oneCatOfSubRates,
-            int noOfCat, String rateForEachCat, String UseWts4Posn, String analyzeMultipleDataSets,
+            int noOfCat, String rateForEachCat, String categoriesFile, String UseWts4Posn, String weightsFile,
+            String analyzeMultipleDataSets, String DataWeights,
             int noOfMultipleDataSets, String inputSequencesInterleaved)
     {
-        String partCode = "";
-        String restCode = "";
-        String errorMsg = "";
-        partCode += generatePartCode4Model(model);
+        partCodeG += generatePartCode4Model(model);
 
         if (model.equalsIgnoreCase("JTT") || model.equalsIgnoreCase("PMB")
                 || model.equalsIgnoreCase("PAM"))
         {
-            if (GammaDistrOfRates.equalsIgnoreCase("no") || GammaDistrOfRates.equalsIgnoreCase("false"))
-            {
-                CoeffOfVariation = 0;
-                fracOfInvSites = 0;
-            } else if (GammaDistrOfRates.equalsIgnoreCase("yes") || GammaDistrOfRates.equalsIgnoreCase("true"))
+            if (GammaDistrOfRates.equalsIgnoreCase(""))
+                GammaDistrOfRates="no";
+            if (GammaDistrOfRates.equalsIgnoreCase("yes"))
             {
                 if (CoeffOfVariation <= 0)
                 {
                     errorMsg += "CoeffOfVariation : Coefficient of variation of substitution rate among sites (must be positive) In gamma distribution parameters, this is 1/(square root of alpha)\n";
                 } else
                 {
-                    partCode += "G\n";
+                    partCodeG += "G\n";
                     restCode += Double.toString(CoeffOfVariation) + "\n";
                 }
 
@@ -142,11 +142,11 @@ public class protdist
                 }
                 if (flag == 0)
                 {
-                    partCode += "G\nG\n";
+                    partCodeG += "G\nG\n";
                     restCode += Double.toString(CoeffOfVariation) + "\n";
                     restCode += Double.toString(fracOfInvSites) + "\n";
                 }
-            } else
+            } else if (!GammaDistrOfRates.equalsIgnoreCase("no"))
             {
                 errorMsg += "GammaDistrOfRates: Gamma distribution of rates among positions, takes only following values\n"
                         + "yes, no or Gamma+Invariant\n";
@@ -155,13 +155,9 @@ public class protdist
         }//end GammaDistrOfRates
         //--------------------------------------------------------
         //begin One category of substitution rates
-        //if (oneCatOfSubRates.equals("")) 
+        if (oneCatOfSubRates.equals("")) 
             oneCatOfSubRates="yes";
-        if (oneCatOfSubRates.equalsIgnoreCase("yes") || oneCatOfSubRates.equalsIgnoreCase("true"))
-        {
-            noOfCat = 0;
-            rateForEachCat = "";
-        } else if (oneCatOfSubRates.equalsIgnoreCase("no") || oneCatOfSubRates.equalsIgnoreCase("false"))
+        if (oneCatOfSubRates.equalsIgnoreCase("no"))
         {
             rateForEachCat.trim();
             String[] s = rateForEachCat.split(" ");
@@ -171,15 +167,19 @@ public class protdist
             } else if (s.length != noOfCat)
             {
                 errorMsg += "rateForEachCat : Rate for each category\n"
-                        + "Please enter exactly number of values separated bya a space\n";
-            } else
+                        + "Please enter exact number of values separated by a space\n";
+            } else if(categoriesFile.equals(""))
             {
-                partCode += "C\n" + Integer.toString(noOfCat)
+                errorMsg += "Data should be entered for categories file\n";            
+            }
+            else
+            {
+                partCodeG += "C\n" + Integer.toString(noOfCat)
                         + "\n" + rateForEachCat
                         + "\n";
             }
 
-        } else
+        } else if (!oneCatOfSubRates.equalsIgnoreCase("yes"))
         {
             errorMsg += "oneCatOfSubRates: One category of substitution rates:, takes only following values\n"
                     + "yes or no\n";
@@ -187,30 +187,83 @@ public class protdist
         //end One category of substitution rates
         //--------------------------------------------------------
         // begin wights for position
-        //if (UseWts4Posn.equals("")) 
+        if (UseWts4Posn.equals("")) 
             UseWts4Posn="no" ;
-        if (UseWts4Posn.equalsIgnoreCase("no") || UseWts4Posn.equalsIgnoreCase("false"))
-        {
-            //cool
-        }
-        else if (UseWts4Posn.equalsIgnoreCase("yes") || UseWts4Posn.equalsIgnoreCase("true"))
+        if (UseWts4Posn.equalsIgnoreCase("yes"))
         {
             //to do, allow specifing weights, requires storing them in a file
             errorMsg += "UseWts4Posn : Currently we do not support weights for positions\n";
         }
-        else
+        else if (!UseWts4Posn.equalsIgnoreCase("no"))
         {
-            errorMsg += "UseWts4Posn : Currently we do not support weights for positions\n";        
+            errorMsg += "UseWts4Posn : takes only following values\n"
+                     + "yes or no\n";
         }        
-        // begin wights for position
+        // end wights for position
         //--------------------------------------------------------        
+        // begin Analyze multiple datasets
+        if (analyzeMultipleDataSets.equalsIgnoreCase(""))
+            analyzeMultipleDataSets="no";
+        if (analyzeMultipleDataSets.equalsIgnoreCase("yes"))
+        {
+            if(DataWeights.equalsIgnoreCase("d"))
+            {
+                partCodeG += "d\n";
+                if (noOfMultipleDataSets <= 0)
+                {
+                    errorMsg += "noOfMultipleDataSets : A value greater than 0 must be entered\n";
+                } else
+                {
+                    partCodeG += Integer.toString(noOfMultipleDataSets) + "\n";
+                }
+            }
+            else if(DataWeights.equalsIgnoreCase("w"))
+            {
+                partCodeG += "w\n";
+                if (noOfMultipleDataSets <= 0)
+                {
+                    errorMsg += "noOfMultipleDataSets : A value greater than 0 must be entered\n";
+                } else
+                {
+                    partCodeG += Integer.toString(noOfMultipleDataSets) + "\n";
+                }
+            }
+            else
+               errorMsg += "DataWeights : takes only following values\n"
+                     + "D: data or W: weights\n";
+        }
+        else if (!analyzeMultipleDataSets.equalsIgnoreCase("no"))
+        {
+               errorMsg += "analyzeMultipleDataSets : takes only following values\n"
+                     + "yes or no\n";        
+        }
         
-        return true;
+        // end Analyze multiple datasets
+        //--------------------------------------------------------
+        // begin inputSequencesInterleaved
+        if (inputSequencesInterleaved.equalsIgnoreCase(""))
+            inputSequencesInterleaved = "yes";
+        if (inputSequencesInterleaved.equalsIgnoreCase("no"))
+        {
+            partCodeG += "i\n";
+        }
+        else if (!inputSequencesInterleaved.equalsIgnoreCase("yes"))
+        {
+               errorMsg += "inputSequencesInterleaved : takes only following values\n"
+                     + "yes or no\n";                
+        }
+        // endinputSequencesInterleaved
+        
+        if(errorMsg.equals(""))
+            return true;
+        else
+            return false;
     }
 
     public static String protdist(String query, String model, String GammaDistrOfRates,
             double CoeffOfVariation, double fracOfInvSites, String oneCatOfSubRates,
-            int noOfCat, String rateForEachCat, String UseWts4Posn, String analyzeMultipleDataSets,
+            int noOfCat, String rateForEachCat, String categoriesFile, String UseWts4Posn, String weightsFile,
+            String analyzeMultipleDataSets, String DataWeights,
             int noOfMultipleDataSets, String inputSequencesInterleaved)
     {
         String output = "";
@@ -219,8 +272,8 @@ public class protdist
             //Are the inputs entered valid
             boolean check =
                     verify(model, GammaDistrOfRates, CoeffOfVariation, fracOfInvSites,
-                    oneCatOfSubRates, noOfCat, rateForEachCat, UseWts4Posn,
-                    analyzeMultipleDataSets, noOfMultipleDataSets, inputSequencesInterleaved);
+                    oneCatOfSubRates, noOfCat, rateForEachCat, categoriesFile, UseWts4Posn, weightsFile,
+                    analyzeMultipleDataSets, DataWeights, noOfMultipleDataSets, inputSequencesInterleaved);
             if (check)
             {
                 //Create a new Directory for Current request in tmp folder
@@ -240,9 +293,28 @@ public class protdist
                 BufferedWriter w = new BufferedWriter(f);
                 w.write(query);
                 w.close();
+                
+                if (categoriesFile.length() > 0)
+                {
+                    f = new FileWriter(dirNamePath + "/categories");
+                    BufferedWriter w1 = new BufferedWriter(f);
+                    w1.write(categoriesFile);
+                    w1.close();
+
+                }
+                
+                if (weightsFile.length() > 0)
+                {
+                    f = new FileWriter(dirNamePath + "/weights");
+                    BufferedWriter w2 = new BufferedWriter(f);
+                    w2.write(weightsFile);
+                    w2.close();
+                }
 
                 //Create .sh file in the newly created Dir
-                String partCode = generatePartCode();
+                String partCode = partCodeG;
+                partCode +="y\n";
+                partCode += restCode;
 
                 String code = "#!/bin/bash\n"
                         + "cd " + dirNamePath + "\n"
@@ -262,11 +334,7 @@ public class protdist
             }//end if
             else
             {
-                output = "ERROR: This operation takes only following values for model\n"
-                        + "JTT (Jones-Taylor-Thornton matrix), "
-                        + "PMB (Henikoff/Tillier PMB matrix), "
-                        + "PAM (Dayhoff PAM matrix), "
-                        + "kimura, Similarity Table and Categories model";
+                output = errorMsg;
             }//end else
 
 
@@ -287,7 +355,7 @@ public class protdist
 
         String query = "";
 
-        FileInputStream fstream = new FileInputStream("/home/alok/Desktop/tmp/PhylipSampleInputs/protdist.txt");
+        FileInputStream fstream = new FileInputStream("/home/alok/Desktop/tmp/PhylipSampleInputs/protdist/infile");
         DataInputStream in = new DataInputStream(fstream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String strLine;
@@ -299,14 +367,29 @@ public class protdist
 
         //System.out.println(query);
 
-        System.out.println(protdist.protdistDefaultParameters(query, "Categories model"));
+        //System.out.println(protdist.protdistDefaultParameters(query, "Categories model"));
+        String model="PMB"; 
+        String GammaDistrOfRates = "Gamma+Invariant";
+        double CoeffOfVariation = 2;
+        double fracOfInvSites = .5;
+        String oneCatOfSubRates = "no";
+        int noOfCat = 1;
+        String rateForEachCat = "1";
+        String categoriesFile = "1222111112211122";
+        String UseWts4Posn = "";
+        String weightsFile = "";
+        String analyzeMultipleDataSets = "yes";
+        String DataWeights = "d";
+        int noOfMultipleDataSets = 1;
+        String inputSequencesInterleaved = "no";
+        
+        
+        System.out.println(
+                protdist(query, model, GammaDistrOfRates, CoeffOfVariation, fracOfInvSites,
+                oneCatOfSubRates, noOfCat, rateForEachCat, categoriesFile, UseWts4Posn, weightsFile,
+                analyzeMultipleDataSets, DataWeights, noOfMultipleDataSets, inputSequencesInterleaved)
+                );
 
-
-    }
-
-    private static String generatePartCode()
-    {
-        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     private static String generatePartCode4Model(String model)

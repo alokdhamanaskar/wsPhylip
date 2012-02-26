@@ -102,7 +102,7 @@ public class retrieveResult
 
     public static void main(String[] args)
     {
-        System.out.println(retrieveResult.retrieveResult1("PhylipProtdist:252eb89d-7d53-406c-b26a-2f0d1f57ce5d"));
+        System.out.println(retrieveResult.retrieveResult1("PhylipProtdist:d920bd86-7742-4e28-a1ef-fd7aa45a7144"));
     }//main ends
 }//Class ends
 
