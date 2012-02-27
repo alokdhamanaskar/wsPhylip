@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package phylipWrappers;
 
 import java.io.BufferedReader;
@@ -32,11 +28,8 @@ public class protdist
         String output = "";
         try
         {
-            //Are the inputs entered valid
             if (model.equals(""))
-            {
                 model = "JTT";
-            }
             if (model.equalsIgnoreCase("JTT") || model.equalsIgnoreCase("PMB")
                     || model.equalsIgnoreCase("PAM") || model.equalsIgnoreCase("Kimura")
                     || model.equalsIgnoreCase("Similarity Table")
@@ -82,11 +75,7 @@ public class protdist
             }//end if
             else
             {
-                output = "ERROR: This operation takes only following values for model\n"
-                        + "JTT (Jones-Taylor-Thornton matrix), "
-                        + "PMB (Henikoff/Tillier PMB matrix), "
-                        + "PAM (Dayhoff PAM matrix), "
-                        + "kimura, Similarity Table and Categories model";
+                output = errorMsg;
             }//end else
 
 
@@ -105,13 +94,15 @@ public class protdist
     public static boolean verify(String model, String GammaDistrOfRates,
             double CoeffOfVariation, double fracOfInvSites, String oneCatOfSubRates,
             int noOfCat, String rateForEachCat, String categoriesFile, String UseWts4Posn, String weightsFile,
-            String analyzeMultipleDataSets, String DataWeights,
-            int noOfMultipleDataSets, String inputSequencesInterleaved)
+            String analyzeMultipleDataSets, String DataWeights, int noOfMultipleDataSets, String inputSequencesInterleaved,
+            double transitionTransversion, String baseFreq, double ProbChangeCat, String geneticCode, String catOfAminoAcids)
     {
+        if (model.equals(""))
+            model = "JTT";
         partCodeG += generatePartCode4Model(model);
 
         if (model.equalsIgnoreCase("JTT") || model.equalsIgnoreCase("PMB")
-                || model.equalsIgnoreCase("PAM"))
+                || model.equalsIgnoreCase("PAM") || model.equalsIgnoreCase("Categories model"))
         {
             if (GammaDistrOfRates.equalsIgnoreCase(""))
                 GammaDistrOfRates="no";
@@ -208,23 +199,24 @@ public class protdist
         {
             if(DataWeights.equalsIgnoreCase("d"))
             {
-                partCodeG += "d\n";
-                if (noOfMultipleDataSets <= 0)
+                if (noOfMultipleDataSets <= 1)
                 {
-                    errorMsg += "noOfMultipleDataSets : A value greater than 0 must be entered\n";
+                    errorMsg += "noOfMultipleDataSets : A value greater than 1 must be entered\n";
                 } else
                 {
+                    partCodeG += "m\nd\n";
                     partCodeG += Integer.toString(noOfMultipleDataSets) + "\n";
                 }
             }
             else if(DataWeights.equalsIgnoreCase("w"))
             {
-                partCodeG += "w\n";
-                if (noOfMultipleDataSets <= 0)
+
+                if (noOfMultipleDataSets <= 1)
                 {
-                    errorMsg += "noOfMultipleDataSets : A value greater than 0 must be entered\n";
+                    errorMsg += "noOfMultipleDataSets : A value greater than 1 must be entered\n";
                 } else
                 {
+                    partCodeG += "m\nw\n";
                     partCodeG += Integer.toString(noOfMultipleDataSets) + "\n";
                 }
             }
@@ -253,6 +245,72 @@ public class protdist
                      + "yes or no\n";                
         }
         // endinputSequencesInterleaved
+        //--------------------------------------------------------
+        //--------------------------------------------------------
+        // Special inputs that are part of only Categories model
+        if (model.equalsIgnoreCase("Categories model"))
+        {
+            if(transitionTransversion!=0)
+            {
+                if(transitionTransversion<0)
+                   errorMsg += "transition/Transversion ratio should be greater that 0\n";         
+                else
+                    partCodeG += "t\n"+ Double.toString(transitionTransversion) + "\n";                
+            }
+
+            if(ProbChangeCat!=0)
+            {
+                if(ProbChangeCat < 0 || ProbChangeCat > 1)
+                   errorMsg += "Probability of change category should be between 0 and 1\n";         
+                else
+                    partCodeG += "E\n"+ Double.toString(ProbChangeCat) + "\n";                
+            }
+            
+            if (!baseFreq.equals(""))
+            {
+                baseFreq.trim();
+                String[] freqs = baseFreq.split(" ");
+                if (freqs.length != 4)
+                    errorMsg +="Frequencies of bases A,C,G,T MUST SUM TO 1, enter values separated by space\n";
+                else
+                {
+                    int sum = 0 ;
+                    try{
+                        for (int j =0; j<4 ; j++)
+                            sum += Integer.parseInt(freqs[j]);
+                        if (sum!= 1)
+                            errorMsg +="Frequencies of bases A,C,G,T MUST SUM TO 1, enter values separated by space\n";
+                        else
+                            partCodeG += "F\n"+ baseFreq + "\n";                
+                    }
+                    catch(Exception e)
+                    {
+                        errorMsg +="Frequencies of bases A,C,G,T MUST SUM TO 1, enter values separated by space\n";
+                    }
+                }
+            }// if for BaseFreq ends
+            
+            if(!geneticCode.equalsIgnoreCase(""))
+            {
+                if(geneticCode.equalsIgnoreCase("Universal") || geneticCode.equalsIgnoreCase("Mitochondrial") || 
+                        geneticCode.equalsIgnoreCase("Vertebrate mitochondrial") || geneticCode.equalsIgnoreCase("Fly mitochondrial") ||
+                        geneticCode.equalsIgnoreCase("Yeast mitochondrial"))
+                    partCodeG += "U\n"+ geneticCode.charAt(0) + "\n";                                                
+                else
+                    errorMsg += "geneticCode can take only following values: Universal, Mitochondrial,"
+                            + " Vertebrate mitochondrial, Fly mitochondrial, Yeast mitochondrial\n";
+            }//if for Genetic code ends
+            
+            if(!catOfAminoAcids.equalsIgnoreCase(""))
+            {
+                if(catOfAminoAcids.equalsIgnoreCase("George/Hunt/Barker") || catOfAminoAcids.equalsIgnoreCase("Chemical") ||
+                        catOfAminoAcids.equalsIgnoreCase("Hall"))
+                    partCodeG += "A\n"+ catOfAminoAcids.charAt(0) + "\n";                                                                
+                else
+                    errorMsg += "categorization of amino acids can take only following values: "
+                            + "George/Hunt/Barker, Chemical, Hall\n";                    
+            }
+        }//if Categories Model special inputs end
         
         if(errorMsg.equals(""))
             return true;
@@ -263,8 +321,8 @@ public class protdist
     public static String protdist(String query, String model, String GammaDistrOfRates,
             double CoeffOfVariation, double fracOfInvSites, String oneCatOfSubRates,
             int noOfCat, String rateForEachCat, String categoriesFile, String UseWts4Posn, String weightsFile,
-            String analyzeMultipleDataSets, String DataWeights,
-            int noOfMultipleDataSets, String inputSequencesInterleaved)
+            String analyzeMultipleDataSets, String DataWeights, int noOfMultipleDataSets, String inputSequencesInterleaved, 
+            double transitionTransversion, String baseFreq, double ProbChangeCat, String geneticCode, String catOfAminoAcids)
     {
         String output = "";
         try
@@ -273,7 +331,8 @@ public class protdist
             boolean check =
                     verify(model, GammaDistrOfRates, CoeffOfVariation, fracOfInvSites,
                     oneCatOfSubRates, noOfCat, rateForEachCat, categoriesFile, UseWts4Posn, weightsFile,
-                    analyzeMultipleDataSets, DataWeights, noOfMultipleDataSets, inputSequencesInterleaved);
+                    analyzeMultipleDataSets, DataWeights, noOfMultipleDataSets, inputSequencesInterleaved,
+                    transitionTransversion,baseFreq, ProbChangeCat, geneticCode, catOfAminoAcids);
             if (check)
             {
                 //Create a new Directory for Current request in tmp folder
@@ -318,7 +377,7 @@ public class protdist
 
                 String code = "#!/bin/bash\n"
                         + "cd " + dirNamePath + "\n"
-                        + "phylip protdist <<EOD\n"
+                        + "phylip protdist >>op.txt <<EOD\n"
                         + "query.txt\n"
                         + partCode
                         + "EOD";
@@ -349,49 +408,6 @@ public class protdist
         }
 
     }
-
-    public static void main(String[] args) throws FileNotFoundException, IOException
-    {
-
-        String query = "";
-
-        FileInputStream fstream = new FileInputStream("/home/alok/Desktop/tmp/PhylipSampleInputs/protdist/infile");
-        DataInputStream in = new DataInputStream(fstream);
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        String strLine;
-        while ((strLine = br.readLine()) != null)
-        {
-            query += strLine + "\n";
-        }
-        in.close();
-
-        //System.out.println(query);
-
-        //System.out.println(protdist.protdistDefaultParameters(query, "Categories model"));
-        String model="PMB"; 
-        String GammaDistrOfRates = "Gamma+Invariant";
-        double CoeffOfVariation = 2;
-        double fracOfInvSites = .5;
-        String oneCatOfSubRates = "no";
-        int noOfCat = 1;
-        String rateForEachCat = "1";
-        String categoriesFile = "1222111112211122";
-        String UseWts4Posn = "";
-        String weightsFile = "";
-        String analyzeMultipleDataSets = "yes";
-        String DataWeights = "d";
-        int noOfMultipleDataSets = 1;
-        String inputSequencesInterleaved = "no";
-        
-        
-        System.out.println(
-                protdist(query, model, GammaDistrOfRates, CoeffOfVariation, fracOfInvSites,
-                oneCatOfSubRates, noOfCat, rateForEachCat, categoriesFile, UseWts4Posn, weightsFile,
-                analyzeMultipleDataSets, DataWeights, noOfMultipleDataSets, inputSequencesInterleaved)
-                );
-
-    }
-
     private static String generatePartCode4Model(String model)
     {
         String partCode = "";
@@ -414,7 +430,67 @@ public class protdist
         {
             partCode = "P\nP\nP\nP\nP\n";
         }
+        else
+        {
+            errorMsg += "ERROR: This operation takes only following values for model\n"
+                    + "JTT (Jones-Taylor-Thornton matrix), "
+                    + "PMB (Henikoff/Tillier PMB matrix), "
+                    + "PAM (Dayhoff PAM matrix), "
+                    + "kimura, Similarity Table and Categories model";
+        }
         return partCode;
 
     }
+    public static void main(String[] args) throws FileNotFoundException, IOException
+    {
+
+        String query = "";
+
+        FileInputStream fstream = new FileInputStream("/home/alok/Desktop/tmp/PhylipSampleInputs/protdist/infile");
+        DataInputStream in = new DataInputStream(fstream);
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        String strLine;
+        while ((strLine = br.readLine()) != null)
+        {
+            query += strLine + "\n";
+        }
+        in.close();
+
+        //System.out.println(query);
+
+        //System.out.println(protdist.protdistDefaultParameters(query, "Categories model"));
+        String model="Categories model"; 
+        String GammaDistrOfRates = "Gamma+Invariant";
+        double CoeffOfVariation = 2;
+        double fracOfInvSites = .5;
+        String oneCatOfSubRates = "no";
+        int noOfCat = 1;
+        String rateForEachCat = "1";
+        String categoriesFile = "1222111112211122";
+        String UseWts4Posn = "";
+        String weightsFile = "";
+        String analyzeMultipleDataSets = "yes";
+        String DataWeights = "d";
+        int noOfMultipleDataSets = 2;
+        String inputSequencesInterleaved = "no";
+        
+        double transitionTransversion =3; 
+        String baseFreq = "1 0 0 0 ";
+        double ProbChangeCat = .1; 
+        String geneticCode = "Yeast mitochondrial"; 
+        String catOfAminoAcids = "Chemical";        
+        
+
+        
+        System.out.println(
+                protdist(query, model, GammaDistrOfRates, CoeffOfVariation, fracOfInvSites,
+                oneCatOfSubRates, noOfCat, rateForEachCat, categoriesFile, UseWts4Posn, weightsFile,
+                analyzeMultipleDataSets, DataWeights, noOfMultipleDataSets, inputSequencesInterleaved,
+                transitionTransversion,baseFreq, ProbChangeCat, geneticCode, catOfAminoAcids
+                )
+                );
+
+    }
+
+
 }
