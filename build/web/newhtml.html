@@ -1,0 +1,83 @@
+<?php
+/*
+Template Name: Grants
+Adjust width of main content area using grid column classes 
+("col780" for narrower than the class setting below)
+*/
+?>
+
+<?php get_header(); ?>
+<div id="content" class="clearfix">
+
+    <div id="main" class="col860 clearfix" role="main">
+        <h1 class="showcase-heading">Funded Research Activities Include</h1>
+
+        <br>
+        <table style="width:800px;">
+
+            <tr>
+                <td><h4>End Date</h4></td>
+                <th><h4>Title</h4></th>
+            <th><h4>Name</h4></th>
+            <th><h4>Role</h4></th>
+            </tr>
+
+            <tr>
+                <td colspan="5"><hr><td>
+            </tr>
+
+
+            <?php
+            //Finding Total Posts
+            $TotalPosts = $wpdb->get_var("SELECT COUNT(*) FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'post' ");
+            if (0 < $querystr) $querystr = number_format($querystr);
+
+            /* Parameters for query_posts( );
+            Which fetches posts filtered depending upon Parametes Passed
+            Find details on : http://codex.wordpress.org/Function_Reference/query_posts
+            */
+            $posts_per_page = "&posts_per_page=" . $TotalPosts;
+            $category = "cat=15"; // Category 15 refers to Grants
+            //$order = "&orderby=content&order=asc";
+            $order = "&orderby=content&order=asc";
+
+            //Loop to Fetch Posts Starts
+            query_posts( $category . $posts_per_page . $order ); // Query: Category, &posts_per_page=, &orderby=title&order=asc
+            while (have_posts()) : the_post();
+
+            $key="PI/CO-PI";
+            $PI= get_post_custom_values($key);
+            if ($PI == "")
+            $PI[0]= "N/A";
+
+            $key="Start_End_Date";
+            $date = get_post_custom_values($key);
+            if ($date == "")
+            $date[0]= "N/A";
+
+            ?>
+
+
+            <tr style="border-bottom:1px solid #c7c7c7; padding-bottom:3px;">
+                <td style="width:100px;"><?php echo $date[0]; ?></td>
+                <td style="width:475px;"><?php the_title(); ?></td>
+                <td style="width:150px;"><?php the_content(); ?></td>
+                <td style="width:100px;"><?php echo $PI[0]; ?> </td>
+            </tr>
+
+
+            <?php 
+            endwhile;
+            ?>
+        </table>
+        <br>
+
+
+
+
+
+    </div> <!-- end #main -->
+
+</div> <!-- end #content -->
+
+<?php get_footer(); ?>

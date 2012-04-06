@@ -14,6 +14,7 @@ import java.util.UUID;
 /**
  *
  * @author Alok Dhamanaskar
+ * @see    LICENSE (MIT style license file).
  */
 public class protdist
 {
