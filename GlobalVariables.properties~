@@ -1,0 +1,2 @@
+# Timeout represents the maximum time you want any Phylip operation to run
+timeOut=2

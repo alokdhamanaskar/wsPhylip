@@ -1,0 +1,62 @@
+
+Consensus tree program, version 3.69
+
+Species in order: 
+
+  1. A
+  2. B
+  3. H
+  4. D
+  5. J
+  6. G
+  7. E
+  8. F
+  9. I
+  10. C
+
+
+
+Sets included in the consensus tree
+
+Set (species in order)     How many times out of    9.00
+
+.......**.                   9.00
+..********                   9.00
+.*********                   9.00
+..***.....                   6.00
+..****.***                   6.00
+..***....*                   6.00
+
+
+Sets NOT included in consensus tree: NONE
+
+
+Majority rule consensus tree
+
+CONSENSUS TREE:
+the numbers forks indicate the number
+of times the group consisting of the species
+which are to the right of that fork occurred
+among the trees, out of   9.00 trees
+
+                                          +-------F
+                          +----------9.00-|
+                          |               +-------I
+                          |
+                          |               +-------H
+                          |               |
+                  +--6.00-|       +--6.00-|-------D
+                  |       |       |       |
+                  |       +--6.00-|       +-------J
+                  |       |       |
+          +--9.00-|       |       +---------------C
+          |       |       |
+          |       |       +-----------------------G
+  +--9.00-|       |
+  |       |       +-------------------------------E
+  |       |
+  |       +---------------------------------------B
+  |
+  +-----------------------------------------------A
+
+
