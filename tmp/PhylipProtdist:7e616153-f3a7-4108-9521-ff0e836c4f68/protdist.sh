@@ -1,5 +1,5 @@
 #!/bin/bash
-cd tmp/PhylipProtdist:541157b9-0b58-4e07-8f05-217f2e64bddc
+cd tmp/PhylipProtdist:7e616153-f3a7-4108-9521-ff0e836c4f68
 phylip protdist >>op.txt <<EOD
 query.txt
 P
