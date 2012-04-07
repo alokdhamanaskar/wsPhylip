@@ -77,8 +77,9 @@ public class consense
         try
         {
             //Create a new Directory for Current request in tmp folder
-            String dirName = "PhylipConsense:" + UUID.randomUUID().toString();            
-            String dirNamePath = "tmp/" + dirName;            
+            String dirName = "PhylipConsense:" + UUID.randomUUID().toString();
+           
+            String dirNamePath = util.PropertyFileManager.getValueFromProperty("tmpDir") + dirName;            
             boolean success = (new File(dirNamePath)).mkdir();
             if (success) 
                 System.out.println("Directory: " + dirNamePath + " created");

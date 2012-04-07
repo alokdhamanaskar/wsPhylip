@@ -13,10 +13,10 @@ import java.io.InputStreamReader;
  *
  * @author Alok Dhamanaskar
  */
-public class retrieveResult
+public class RetrieveResults
 {
 
-    public static String retrieveResult1(String dirName)
+    public static String retrieveResult(String dirName)
     {
         String output = "error";
 
@@ -27,11 +27,11 @@ public class retrieveResult
             {
                 try
                 {
-                    FileInputStream fstream = new FileInputStream("tmp/" + dirName + "/outtree");
+                    FileInputStream fstream = new FileInputStream(util.PropertyFileManager.getValueFromProperty("tmpDir") + dirName + "/outtree");
                     DataInputStream in = new DataInputStream(fstream);
                     BufferedReader br = new BufferedReader(new InputStreamReader(in));
                     String s = "";
-                    output = "<outTree>\n";
+                    output += "<outTree>\n";
 
                     while ((s = br.readLine()) != null)
                     {
@@ -102,7 +102,6 @@ public class retrieveResult
 
     public static void main(String[] args)
     {
-        System.out.println(retrieveResult.retrieveResult1("PhylipConsense:09dab6e5-c0f6-4b65-a2e0-a6023fa46277"));
+        System.out.println(RetrieveResults.retrieveResult("PhylipProtdist:b5c6070a-2012-4c8d-b3fa-0b1dd50da965"));
     }//main ends
-}//Class ends
-
+}

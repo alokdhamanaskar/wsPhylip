@@ -38,7 +38,7 @@ public class protdist
             {
                 //Create a new Directory for Current request in tmp folder
                 String dirName = "PhylipProtdist:" + UUID.randomUUID().toString();
-                String dirNamePath = "tmp/" + dirName;
+                String dirNamePath =  util.PropertyFileManager.getValueFromProperty("tmpDir") + dirName;
                 boolean success = (new File(dirNamePath)).mkdir();
                 if (success)
                 {
@@ -72,18 +72,18 @@ public class protdist
                 Runtime rt = Runtime.getRuntime();
                 Process p = rt.exec("sh " + dirNamePath + "/protdist.sh");
 
-                output = dirName;
+                output += dirName;
             }//end if
             else
             {
-                output = errorMsg;
+                output += errorMsg;
             }//end else
 
 
         } catch (Exception ex)
         {
             System.out.println("Program failed due to : " + ex);
-            output = "";
+            output += ex;
 
         } finally
         {
@@ -338,7 +338,7 @@ public class protdist
             {
                 //Create a new Directory for Current request in tmp folder
                 String dirName = "PhylipProtdist:" + UUID.randomUUID().toString();
-                String dirNamePath = "tmp/" + dirName;
+                String dirNamePath = util.PropertyFileManager.getValueFromProperty("tmpDir") + dirName;
                 boolean success = (new File(dirNamePath)).mkdir();
                 if (success)
                 {
@@ -390,18 +390,18 @@ public class protdist
                 Runtime rt = Runtime.getRuntime();
                 Process p = rt.exec("sh " + dirNamePath + "/protdist.sh");
 
-                output = dirName;
+                output += dirName;
             }//end if
             else
             {
-                output = errorMsg;
+                output += errorMsg;
             }//end else
 
 
         } catch (Exception ex)
         {
             System.out.println("Program failed due to : " + ex);
-            output = "";
+            output += ex;
 
         } finally
         {
@@ -459,7 +459,7 @@ public class protdist
 
         //System.out.println(query);
 
-        //System.out.println(protdist.protdistDefaultParameters(query, "Categories model"));
+        System.out.println(protdist.protdistDefaultParameters(query, "Categories model"));
         String model="Categories model"; 
         String GammaDistrOfRates = "Gamma+Invariant";
         double CoeffOfVariation = 2;
@@ -483,13 +483,13 @@ public class protdist
         
 
         
-        System.out.println(
-                protdist(query, model, GammaDistrOfRates, CoeffOfVariation, fracOfInvSites,
-                oneCatOfSubRates, noOfCat, rateForEachCat, categoriesFile, UseWts4Posn, weightsFile,
-                analyzeMultipleDataSets, DataWeights, noOfMultipleDataSets, inputSequencesInterleaved,
-                transitionTransversion,baseFreq, ProbChangeCat, geneticCode, catOfAminoAcids
-                )
-                );
+        //System.out.println(
+//                protdist(query, model, GammaDistrOfRates, CoeffOfVariation, fracOfInvSites,
+//                oneCatOfSubRates, noOfCat, rateForEachCat, categoriesFile, UseWts4Posn, weightsFile,
+//                analyzeMultipleDataSets, DataWeights, noOfMultipleDataSets, inputSequencesInterleaved,
+//                transitionTransversion,baseFreq, ProbChangeCat, geneticCode, catOfAminoAcids
+//                )
+//                );
 
     }
 

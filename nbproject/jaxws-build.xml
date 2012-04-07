@@ -34,4 +34,31 @@
                 JAX-WS WSIMPORT SECTION
                 ===================
             -->
+    <target name="wsimport-init" depends="init">
+        <mkdir dir="${build.generated.sources.dir}/jax-ws"/>
+        <property name="j2ee.platform.wsimport.classpath" value="${libs.jaxws21.classpath}"/>
+        <taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport">
+            <classpath path="${java.home}/../lib/tools.jar:${j2ee.platform.wsimport.classpath}:${javac.classpath}"/>
+        </taskdef>
+        <condition property="conf-dir" value="${conf.dir}/" else="">
+            <isset property="conf.dir"/>
+        </condition>
+    </target>
+    <target name="wsimport-client-phylip" depends="wsimport-init">
+        <mkdir dir="${build.generated.dir}/jax-wsCache/phylip"/>
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/phylip" destdir="${build.generated.dir}/jax-wsCache/phylip" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/phylip/wsdl/localhost_8080/wsPHYLIP/phylip.wsdl" catalog="catalog.xml" extension="true" verbose="true" wsdlLocation="http://localhost:8080/wsPHYLIP/phylip?wsdl" xnocompile="true" xendorsed="true" package="phylipWrappers_client">
+            <depends file="${basedir}/${conf-dir}xml-resources/web-service-references/phylip/wsdl/localhost_8080/wsPHYLIP/phylip.wsdl"/>
+            <produces dir="${build.generated.dir}/jax-wsCache/phylip"/>
+        </wsimport>
+        <copy todir="${build.generated.sources.dir}/jax-ws">
+            <fileset dir="${build.generated.dir}/jax-wsCache/phylip">
+                <include name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="wsimport-client-clean-phylip" depends="-init-project">
+        <delete dir="${build.generated.sources.dir}/jax-ws/phylipWrappers_client"/>
+        <delete dir="${build.generated.dir}/jax-wsCache/phylip"/>
+    </target>
+    <target name="wsimport-client-generate" depends="wsimport-client-phylip"/>
 </project>
