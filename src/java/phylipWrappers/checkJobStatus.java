@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package phylipWrappers;
 
 import java.io.File;
@@ -15,9 +12,9 @@ public class checkJobStatus
 
     public static String CheckStatus(String dirName)
     {
-        File directory = new File("tmp/" + dirName);
-        File outFile = new File("tmp/" + dirName + "/outfile");
-        File outTree = new File("tmp/" + dirName + "/outtree");
+        File directory = new File(util.PropertyFileManager.getValueFromProperty("tmpDir") + dirName);
+        File outFile = new File(util.PropertyFileManager.getValueFromProperty("tmpDir") + dirName + "/outfile");
+        File outTree = new File(util.PropertyFileManager.getValueFromProperty("tmpDir") + dirName + "/outtree");
         String status ="";
         
         boolean exists1 = directory.exists();
