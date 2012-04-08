@@ -17,27 +17,37 @@ public class Phylip
      * Web service operation
      */
     @WebMethod(operationName = "consenseRootedTrees")
-    public String consenseRootedTrees(@WebParam(name = "query")
+    public util.PhylipOutput consenseRootedTrees(@WebParam(name = "query")
     String query, @WebParam(name = "consensusType")
     String consensusType)
     {
-        String output= Consense.consenseRootedTrees(query, consensusType);
-        return output;
+        if (query == null)
+            query = "";
+        if (consensusType == null )
+            consensusType = "";
+        
+        return Consense.consenseRootedTrees(query, consensusType);
     }
 
     /**
      * Web service operation
      */
     @WebMethod(operationName = "consenseNonRootedTrees")
-    public String consenseNonRootedTrees(@WebParam(name = "query")
+    public util.PhylipOutput consenseNonRootedTrees(@WebParam(name = "query")
     String query, @WebParam(name = "consensusType")
     String consensusType, @WebParam(name = "OutgroupRoot")
     String OutgroupRoot, @WebParam(name = "nofOutgroup")
-    int nofOutgroup)
+    Integer nofOutgroup)
     {
-        //            (String query, String consensusType, String OutgroupRoot, int nofOutgroup)
-        String output = Consense.consenseNonRootedTrees(query, consensusType, OutgroupRoot, nofOutgroup);
-        return output;
+        if (query == null)
+            query = "";
+        if (consensusType == null)
+            consensusType = "";
+        if(OutgroupRoot == null)
+            OutgroupRoot = "";
+        if (nofOutgroup == null)
+            nofOutgroup = 0;
+        return Consense.consenseNonRootedTrees(query, consensusType, OutgroupRoot, nofOutgroup.intValue());
     }
 
     /**
@@ -150,8 +160,20 @@ public class Phylip
     /**
      * Web service operation
      */
+    @WebMethod(operationName = "RetrieveConsenseResult")
+    public Consense.ConsenseOutput RetrieveConsenseDistResult(@WebParam(name = "jobId") String jobId)
+    {   
+        if(jobId == null)
+            jobId = "";
+        Consense.ConsenseOutput out  = (Consense.ConsenseOutput) RetrieveResults.retrieveResult(jobId);
+        return out;
+    }    
+    
+    /**
+     * Web service operation
+     */
     @WebMethod(operationName = "getStatus")
-    public String getStatus(@WebParam(name = "jobId") String jobId)
+    public String getStatus(@WebParam(name = "jobId") String jobId) throws Fault
     {
         return CheckJobStatus.CheckStatus(jobId);
     }

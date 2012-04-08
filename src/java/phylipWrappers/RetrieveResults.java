@@ -16,7 +16,8 @@ public class RetrieveResults
     {
         String output = "";
         String status = "Success";
-
+        Consense.ConsenseOutput consenseOut = new Consense.ConsenseOutput();
+        
         String outcome = CheckJobStatus.CheckStatus(dirName);
         status = outcome;
         if (outcome.equalsIgnoreCase("FINISHED"))
@@ -30,35 +31,33 @@ public class RetrieveResults
                     DataInputStream in = new DataInputStream(fstream);
                     BufferedReader br = new BufferedReader(new InputStreamReader(in));
                     String s = "";
-                    output = "<outTree>\n";
-
                     while ((s = br.readLine()) != null)
                     {
-                        output += s + "\n";
+                        consenseOut.outTree += s + "\n";
                     }
-                    output += "</outTree>\n";
                     in.close();
 
-                    fstream = new FileInputStream("tmp/" + dirName + "/outfile");
+                    fstream = new FileInputStream(util.PropertyFileManager.getValueFromProperty("tmpDir") + dirName + "/outfile");
                     in = new DataInputStream(fstream);
                     br = new BufferedReader(new InputStreamReader(in));
                     s = "";
-                    output += "<outFile>\n";
 
                     while ((s = br.readLine()) != null)
                     {
-                        output += s + "\n";
+                        consenseOut.consenseTree += s + "\n";
                     }
-                    output += "</outFile>\n";
                     in.close();
+                    consenseOut.status= status;
                 } catch (Exception e)
                 {
                     System.out.println("Exception Occurred " + e);
-                    output = "There was an error running this job";
+                    consenseOut.status = "There was an error running this job : " + e;
                 }
-
-
-
+                finally
+                {
+                    return consenseOut;
+                }
+               
             } else if (dirName.contains("PhylipProtdist"))
             {
                 try
@@ -98,7 +97,7 @@ public class RetrieveResults
         out.status = status;
         
         return out;
-    }//method retrieveResult1 ends
+    }//method retrieveResult ends
 
     public static void main(String[] args)
     {
