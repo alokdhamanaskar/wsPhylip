@@ -11,6 +11,6 @@ Web services to wrap different phylip programs as Web services.
 Programs wrapped so far.
 
 * wsPhylipProtDist : Exposes Phylip Protdist as a Web service
-	* WSDL : http://mango.ctegd.uga.edu/jkissingLab/SWS/webservices/wsPhylipProtDist.wsdl
+	* WSDL
 * wsPhylipConsense : Exposes Phylip Consense as a Web service
-	* WSDL : http://mango.ctegd.uga.edu/jkissingLab/SWS/webservices/wsPhylipConsense.wsdl
+	* WSDL
