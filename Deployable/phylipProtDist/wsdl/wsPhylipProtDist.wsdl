@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://wsannotations.ctegd.uga.edu/services/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsp1_2="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://wsannotations.ctegd.uga.edu/services/">
+    <wsdl:types>
+        <xsd:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://wsannotations.ctegd.uga.edu/services/">
+            <xsd:element name="getStatus" type="tns:getStatus"/>
+            <xsd:element name="getStatusResponse" type="tns:getStatusResponse"/>
+            <xsd:element name="protdist" type="tns:protdist"/>
+            <xsd:element name="protdistDefaultParameters" type="tns:protdistDefaultParameters"/>
+            <xsd:element name="protdistDefaultParametersResponse" type="tns:protdistDefaultParametersResponse"/>
+            <xsd:element name="protdistResponse" type="tns:protdistResponse"/>
+            <xsd:element name="retrieveProtDistResult" type="tns:retrieveProtDistResult"/>
+            <xsd:element name="retrieveProtDistResultResponse" type="tns:retrieveProtDistResultResponse"/>
+            <xsd:complexType name="retrieveProtDistResult">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="jobId" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="retrieveProtDistResultResponse">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="return" type="tns:proteinDistOutput"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="proteinDistOutput">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="proteinDistanceMatrix" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="status" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="getStatus">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="jobId" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="getStatusResponse">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="jobStatus" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="protdist">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="query" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="model" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="GammaDistrOfRates" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="CoeffOfVariation" type="xsd:double"/>
+                    <xsd:element minOccurs="0" name="fracOfInvSites" type="xsd:double"/>
+                    <xsd:element minOccurs="0" name="oneCatOfSubRates" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="noOfCat" type="xsd:int"/>
+                    <xsd:element minOccurs="0" name="rateForEachCat" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="categoriesFile" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="UseWts4Posn" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="weightsFile" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="analyzeMultipleDataSets" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="DataWeights" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="noOfMultipleDataSets" type="xsd:int"/>
+                    <xsd:element minOccurs="0" name="inputSequencesInterleaved" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="transitionTransversion" type="xsd:double"/>
+                    <xsd:element minOccurs="0" name="baseFreq" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="ProbChangeCat" type="xsd:double"/>
+                    <xsd:element minOccurs="0" name="geneticCode" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="catOfAminoAcids" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="protdistResponse">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="return" type="tns:phylipOutput"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="phylipOutput">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="jobId" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="status" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="protdistDefaultParameters">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="query" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="model" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="protdistDefaultParametersResponse">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="return" type="tns:phylipOutput"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="retrieveProtDistResult">
+        <wsdl:part name="parameters" element="tns:retrieveProtDistResult"/>
+    </wsdl:message>
+    <wsdl:message name="retrieveProtDistResultResponse">
+        <wsdl:part name="parameters" element="tns:retrieveProtDistResultResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getStatus">
+        <wsdl:part name="parameters" element="tns:getStatus"/>
+    </wsdl:message>
+    <wsdl:message name="getStatusResponse">
+        <wsdl:part name="parameters" element="tns:getStatusResponse"/>
+    </wsdl:message>
+    <wsdl:message name="protdist">
+        <wsdl:part name="parameters" element="tns:protdist"/>
+    </wsdl:message>
+    <wsdl:message name="protdistResponse">
+        <wsdl:part name="parameters" element="tns:protdistResponse"/>
+    </wsdl:message>
+    <wsdl:message name="protdistDefaultParameters">
+        <wsdl:part name="parameters" element="tns:protdistDefaultParameters"/>
+    </wsdl:message>
+    <wsdl:message name="protdistDefaultParametersResponse">
+        <wsdl:part name="parameters" element="tns:protdistDefaultParametersResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="wsPhylipProtDistPortType">
+        <wsdl:operation name="retrieveProtDistResult">
+            <wsdl:input message="tns:retrieveProtDistResult" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtDist/retrieveProtDistResultRequest"/>
+            <wsdl:output message="tns:retrieveProtDistResultResponse" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtDist/retrieveProtDistResultResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getStatus">
+            <wsdl:input message="tns:getStatus" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtDist/getStatusRequest"/>
+            <wsdl:output message="tns:getStatusResponse" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtDist/getStatusResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="protdist">
+            <wsdl:input message="tns:protdist" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtDist/protdistRequest"/>
+            <wsdl:output message="tns:protdistResponse" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtDist/protdistResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="protdistDefaultParameters">
+            <wsdl:input message="tns:protdistDefaultParameters" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtDist/protdistDefaultParametersRequest"/>
+            <wsdl:output message="tns:protdistDefaultParametersResponse" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtDist/protdistDefaultParametersResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="wsPhylipProtDistPortBinding" type="tns:wsPhylipProtDistPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="retrieveProtDistResult">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getStatus">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="protdist">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="protdistDefaultParameters">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="wsPhylipProtDist">
+        <wsdl:port name="wsPhylipProtDistPort" binding="tns:wsPhylipProtDistPortBinding">
+            <soap:address location="http://wsannotations.ctegd.uga.edu/axis2/services/wsPhylipProtDist.wsPhylipProtDistPort/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

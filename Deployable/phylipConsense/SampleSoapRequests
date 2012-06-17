@@ -1,0 +1,42 @@
+      <ser:consenseNonRootedTrees>
+         <!--Optional:-->
+         <query>
+(A,(B,(H,(D,(J,(((G,E),(F,I)),C))))));
+(A,(B,(D,((J,H),(((G,E),(F,I)),C)))));
+(A,(B,(D,(H,(J,(((G,E),(F,I)),C))))));
+(A,(B,(E,(G,((F,I),((J,(H,D)),C))))));
+(A,(B,(E,(G,((F,I),(((J,H),D),C))))));
+(A,(B,(E,((F,I),(G,((J,(H,D)),C))))));
+(A,(B,(E,((F,I),(G,(((J,H),D),C))))));
+(A,(B,(E,((G,(F,I)),((J,(H,D)),C)))));
+(A,(B,(E,((G,(F,I)),(((J,H),D),C)))));
+</query>
+         <!--Optional:-->
+         <consensusType>strict</consensusType>
+         <!--Optional:-->
+         <OutgroupRoot>yes</OutgroupRoot>
+         <!--Optional:-->
+         <nofOutgroup>2</nofOutgroup>
+      </ser:consenseNonRootedTrees>
+
+
+      <ser:consenseNonRootedTrees>
+         <!--Optional:-->
+         <query>
+(A,(B,(H,(D,(J,(((G,E),(F,I)),C))))));
+(A,(B,(D,((J,H),(((G,E),(F,I)),C)))));
+(A,(B,(D,(H,(J,(((G,E),(F,I)),C))))));
+(A,(B,(E,(G,((F,I),((J,(H,D)),C))))));
+(A,(B,(E,(G,((F,I),(((J,H),D),C))))));
+(A,(B,(E,((F,I),(G,((J,(H,D)),C))))));
+(A,(B,(E,((F,I),(G,(((J,H),D),C))))));
+(A,(B,(E,((G,(F,I)),((J,(H,D)),C)))));
+(A,(B,(E,((G,(F,I)),(((J,H),D),C)))));
+</query>
+         <!--Optional:-->
+         <consensusType>strict</consensusType>
+         <!--Optional:-->
+         <OutgroupRoot>yes</OutgroupRoot>
+         <!--Optional:-->
+         <nofOutgroup>2</nofOutgroup>
+      </ser:consenseNonRootedTrees>

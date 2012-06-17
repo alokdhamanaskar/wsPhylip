@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jax-ws xmlns="http://www.netbeans.org/ns/jax-ws/1">
   <services>
-    <service name="Phylip">
-      <implementation-class>phylipWrappers.Phylip</implementation-class>
+    <service name="wsPhylipProtDist">
+      <implementation-class>phylipProtDist.ProtDistWS</implementation-class>
+    </service>
+    <service name="wsPhylipConsense">
+      <implementation-class>phylipConsense.ConsenseWS</implementation-class>
     </service>
   </services>
   <clients>

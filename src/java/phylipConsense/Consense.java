@@ -1,31 +1,43 @@
-package phylipWrappers;
+package phylipConsense;
 
 import java.io.*;
 import java.util.UUID;
 import util.PhylipOutput;
 import static java.lang.System.out;
+import util.GetAbsolutePath;
 
 /**
  *
  * @author Alok Dhamanaskar
  * @see    LICENSE (MIT style license file).
  * 
+ * <br/><br/> Creates the parameters required for running the Phylip Consense program, depending upon User input
+ * 
  */
 public class Consense
 {
+
+    public static String errorMsg="Job Submitted successfully";
+    public static String partCodeG = "";
+
     public static class ConsenseOutput
     {
         public String consenseTree;
         public String outTree;
         public String status;
-    }
+    }//ConsenseOutput
         
-    public static String errorMsg="Job Submitted successfully";
-    public static String partCodeG = "";
-
-    
+    /**
+     * Invokes Phylip Consense program for Rooted Trees
+     * @param query
+     * @param consensusType The consensus type (MRe, strict, MR, Ml)
+     * @return A Job identifier for the web service job submitted
+     */
     public static PhylipOutput consenseRootedTrees(String query, String consensusType)
     {
+        GetAbsolutePath pt = new GetAbsolutePath();
+        String absolutePath = pt.getPath();
+        
         Runtime rt = Runtime.getRuntime();
         String output = "";
         String status = "Job Successfully Submitted";
@@ -42,7 +54,7 @@ public class Consense
         {
             //Create a new Directory for Current request in tmp folder
             String dirName = "PhylipConsense:" + UUID.randomUUID().toString();
-            String dirNamePath = util.PropertyFileManager.getValueFromProperty("tmpDir") + dirName;
+            String dirNamePath = absolutePath + dirName;
             boolean success = (new File(dirNamePath)).mkdir();
             if (success)
             {
@@ -100,10 +112,22 @@ public class Consense
             return out;
         }
 
-    }
+    }//consenseRootedTrees
 
+       
+    /**
+     * Invokes Phylip Consense program for Non-Rooted Trees
+     * @param query
+     * @param consensusType The consensus type (MRe, strict, MR, Ml)
+     * @param OutgroupRoot The Outgroup root
+     * @param nofOutgroup Number of OutGroups
+     * @return A Job identifier for the web service job submitted
+     */
     public static PhylipOutput consenseNonRootedTrees(String query, String consensusType, String OutgroupRoot, int nofOutgroup)
     {
+        GetAbsolutePath pt = new GetAbsolutePath();
+        String absolutePath = pt.getPath();
+        
         Runtime rt = Runtime.getRuntime();
         String output = "";
         String status = "Job Successfully Submitted";
@@ -121,7 +145,7 @@ public class Consense
         {
             //Create a new Directory for Current request in tmp folder
             String dirName = "PhylipConsense:" + UUID.randomUUID().toString();
-            String dirNamePath = util.PropertyFileManager.getValueFromProperty("tmpDir") + dirName;
+            String dirNamePath = absolutePath + dirName;
             boolean success = (new File(dirNamePath)).mkdir();
             if (success)
             {
@@ -169,9 +193,16 @@ public class Consense
             return out;
         }
 
+    }//consenseNonRootedTrees
 
-    }
-
+    /**
+     * Generates the code to execute Phylip Consense program for NonRootedTrees.
+     * 
+     * @param consensusType The consensus type (MRe, strict, MR, Ml)
+     * @param OutgroupRoot The Outgroup root
+     * @param nofOutgroup Number of OutGroups
+     * @return 
+     */
     private static boolean getCodeNonRootedTrees(String consensusType, String OutgroupRoot, int nofOutgroup)
     {
         if (consensusType.equalsIgnoreCase("MRe"))
@@ -218,14 +249,15 @@ public class Consense
         }
 
         return true;
-    }
+    }//getCodeNonRootedTrees
 
     public static void main(String[] args) throws FileNotFoundException, IOException
     {
-
+        //Test code
         String query = "";
-
-        FileInputStream fstream = new FileInputStream("/home/alok/Desktop/tmp/PhylipSampleInputs/consense.txt");
+        GetAbsolutePath pt = new GetAbsolutePath();
+        String absolutePath = pt.getPath();
+        FileInputStream fstream = new FileInputStream(absolutePath +"PhylipSampleInputs/consense.txt");
         DataInputStream in = new DataInputStream(fstream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String strLine;
@@ -235,11 +267,12 @@ public class Consense
         }
         in.close();
                    
-//        PhylipOutput out1 = Consense.consenseNonRootedTrees(query, "strict", "yes",1000);
-//        out.println(out1.jobId + "-- " + out1.status);
+        PhylipOutput out1 = Consense.consenseNonRootedTrees(query, "strict", "yes",3);
+        out.println(out1.jobId + "-- " + out1.status);
 
-        PhylipOutput out2 = Consense.consenseRootedTrees(query, "mr");
-        out.println(out2.jobId + "-- " + out2.status);
+//        PhylipOutput out2 = Consense.consenseRootedTrees(query, "mr");
+//        out.println(out2.jobId + "-- " + out2.status);
 
-    }
-}
+    }//main
+    
+}//Consense

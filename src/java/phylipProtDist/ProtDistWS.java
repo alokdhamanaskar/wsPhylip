@@ -1,58 +1,29 @@
 
-package phylipWrappers;
+package phylipProtDist;
 
+import util.CheckJobStatus;
+import util.RetrieveResults;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
-import util.Fault;
+import javax.jws.WebResult;
 
 /**
  *
  * @author Alok Dhamanaskar
+ * @see    LICENSE (MIT style license file).
+ * 
+ * <br/><br/> The class exposes methods for invoking Phylip ProtDist program.
  */
-@WebService(serviceName = "phylip")
-public class Phylip
+@WebService(
+        name            = "wsPhylipProtDist", 
+        targetNamespace = "http://wsannotations.ctegd.uga.edu/services/",
+        serviceName     = "wsPhylipProtDist",
+        portName        = "wsPhylipProtDistPort",
+        wsdlLocation    = "wsPhylipProtDist.wsdl"
+        )
+public class ProtDistWS
 {
-    /**
-     * Web service operation
-     */
-    @WebMethod(operationName = "consenseRootedTrees")
-    public util.PhylipOutput consenseRootedTrees(@WebParam(name = "query")
-    String query, @WebParam(name = "consensusType")
-    String consensusType)
-    {
-        if (query == null)
-            query = "";
-        if (consensusType == null )
-            consensusType = "";
-        
-        return Consense.consenseRootedTrees(query, consensusType);
-    }
-
-    /**
-     * Web service operation
-     */
-    @WebMethod(operationName = "consenseNonRootedTrees")
-    public util.PhylipOutput consenseNonRootedTrees(@WebParam(name = "query")
-    String query, @WebParam(name = "consensusType")
-    String consensusType, @WebParam(name = "OutgroupRoot")
-    String OutgroupRoot, @WebParam(name = "nofOutgroup")
-    Integer nofOutgroup)
-    {
-        if (query == null)
-            query = "";
-        if (consensusType == null)
-            consensusType = "";
-        if(OutgroupRoot == null)
-            OutgroupRoot = "";
-        if (nofOutgroup == null)
-            nofOutgroup = 0;
-        return Consense.consenseNonRootedTrees(query, consensusType, OutgroupRoot, nofOutgroup.intValue());
-    }
-
-    /**
-     * Web service operation
-     */
     @WebMethod(operationName = "protdist")
     public util.PhylipOutput protdist(
                     @WebParam(name = "query") String query, 
@@ -75,7 +46,7 @@ public class Phylip
                     @WebParam(name = "ProbChangeCat")Double ProbChangeCat,
                     @WebParam(name = "geneticCode") String geneticCode, 
                     @WebParam(name = "catOfAminoAcids")String catOfAminoAcids
-                    ) throws Fault
+                    ) 
     {
         if (query == null)
             query = "";
@@ -118,7 +89,6 @@ public class Phylip
         if(catOfAminoAcids==null)
             catOfAminoAcids="";
         
-        query = "7   75\n BBOV_III002820	MREVISIHVGQAGIQVGNACWELFCLEHGIQPDGHMPADKQIQGDDAFSTFFSETGAGKHVPRCVFVDLEPTVVD\n BBOV_IV004290	MREVIAVHIGQAGVQVGNAVWELFCIEHGIRPDGTVEADPGYGAGEEDHAFHAFFAETASGKHVPRCLFVDLEPS\n Chro.40322	MREVISIHVGQAGIQIGNACWELFCLEHGINPDGTMPMSEQNMGISDDAFNTFFSETGAGKHVPRAVFVDLEPTV\n CMU_017970	MREVISIHVGQAGIQVGNACWELFCLEHGINPDGTMPASEQNMGISDDAFNTFFSETGAGKHVPRAVFVDLEPTV\n cgd4_2860	SYSLNMREVISIHVGQAGIQIGNACWELFCLEHGINPDGTMPMSEQNMGISDDAFNTFFSETGAGKHVPRAVFVD\n ETH_00033310	MREVISIHVGQAGIQIGNACWELFCLEHGIQPDGQMPPDQSLGGGDDAFNTFFSETGAGKHVPRCVFLDLEPTVV\n NCLIV_031660	MPGEVVTVQCGQAGEQLGFAFWELLLAEHGLTYEGSPGKHNAPEGCQNNVDCFFYEAHSGRRVPRSAMIDLDNSA\n";
        return Protdist.protdist(query, model, GammaDistrOfRates, CoeffOfVariation.doubleValue(), 
                 fracOfInvSites.doubleValue(), oneCatOfSubRates, noOfCat.intValue(), 
                 rateForEachCat, categoriesFile, UseWts4Posn, weightsFile,
@@ -126,11 +96,8 @@ public class Phylip
                 inputSequencesInterleaved, transitionTransversion.doubleValue(),baseFreq, 
                 ProbChangeCat.doubleValue(), geneticCode, catOfAminoAcids
                 );
-    }
+    }//protdist
 
-    /**
-     * Web service operation
-     */
     @WebMethod(operationName = "protdistDefaultParameters")
     public util.PhylipOutput protdistDefaultParameters(
             @WebParam(name = "query") String query, 
@@ -141,40 +108,24 @@ public class Phylip
             query = "";
         if (model == null)
             model = "";            
-        //query = "7   75\n BBOV_III002820	MREVISIHVGQAGIQVGNACWELFCLEHGIQPDGHMPADKQIQGDDAFSTFFSETGAGKHVPRCVFVDLEPTVVD\n BBOV_IV004290	MREVIAVHIGQAGVQVGNAVWELFCIEHGIRPDGTVEADPGYGAGEEDHAFHAFFAETASGKHVPRCLFVDLEPS\n Chro.40322	MREVISIHVGQAGIQIGNACWELFCLEHGINPDGTMPMSEQNMGISDDAFNTFFSETGAGKHVPRAVFVDLEPTV\n CMU_017970	MREVISIHVGQAGIQVGNACWELFCLEHGINPDGTMPASEQNMGISDDAFNTFFSETGAGKHVPRAVFVDLEPTV\n cgd4_2860	SYSLNMREVISIHVGQAGIQIGNACWELFCLEHGINPDGTMPMSEQNMGISDDAFNTFFSETGAGKHVPRAVFVD\n ETH_00033310	MREVISIHVGQAGIQIGNACWELFCLEHGIQPDGQMPPDQSLGGGDDAFNTFFSETGAGKHVPRCVFLDLEPTVV\n NCLIV_031660	MPGEVVTVQCGQAGEQLGFAFWELLLAEHGLTYEGSPGKHNAPEGCQNNVDCFFYEAHSGRRVPRSAMIDLDNSA\n";
         return Protdist.protdistDefaultParameters(query, model);
-    }
+    }//protdistDefaultParameters
 
-    /**
-     * Web service operation
-     */
-    @WebMethod(operationName = "RetrieveProtDistResult")
+    @WebMethod(operationName = "retrieveProtDistResult")
     public Protdist.ProteinDistOutput RetrieveProtDistResult(@WebParam(name = "jobId") String jobId)
     {   
         if(jobId == null)
             jobId = "";
         Protdist.ProteinDistOutput out  = (Protdist.ProteinDistOutput) RetrieveResults.retrieveResult(jobId);
         return out;
-    }
+    }//RetrieveProtDistResult
 
-    /**
-     * Web service operation
-     */
-    @WebMethod(operationName = "RetrieveConsenseResult")
-    public Consense.ConsenseOutput RetrieveConsenseDistResult(@WebParam(name = "jobId") String jobId)
-    {   
-        if(jobId == null)
-            jobId = "";
-        Consense.ConsenseOutput out  = (Consense.ConsenseOutput) RetrieveResults.retrieveResult(jobId);
-        return out;
-    }    
     
-    /**
-     * Web service operation
-     */
     @WebMethod(operationName = "getStatus")
-    public String getStatus(@WebParam(name = "jobId") String jobId) throws Fault
+    @WebResult(name = "jobStatus")
+    public String getStatus(@WebParam(name = "jobId") String jobId)
     {
-        return CheckJobStatus.CheckStatus(jobId);
-    }
+        return CheckJobStatus.checkStatus(jobId);
+    }//getStatus
+    
 }

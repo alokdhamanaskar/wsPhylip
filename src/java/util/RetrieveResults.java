@@ -1,9 +1,11 @@
-package phylipWrappers;
+package util;
 
+import phylipConsense.Consense;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import phylipProtDist.Protdist;
 
 /**
  *
@@ -14,11 +16,13 @@ public class RetrieveResults
 
     public static Object retrieveResult(String dirName)
     {
+        GetAbsolutePath pt = new GetAbsolutePath();
+        String absolutePath = pt.getPath();
         String output = "";
         String status = "Success";
         Consense.ConsenseOutput consenseOut = new Consense.ConsenseOutput();
         
-        String outcome = CheckJobStatus.CheckStatus(dirName);
+        String outcome = CheckJobStatus.checkStatus(dirName);
         status = outcome;
         if (outcome.equalsIgnoreCase("FINISHED"))
         {
@@ -27,7 +31,7 @@ public class RetrieveResults
                 try
                 {
                     FileInputStream fstream = new FileInputStream(
-                            util.PropertyFileManager.getValueFromProperty("tmpDir")  + dirName + "/outtree");
+                            absolutePath  + dirName + "/outtree");
                     DataInputStream in = new DataInputStream(fstream);
                     BufferedReader br = new BufferedReader(new InputStreamReader(in));
                     String s = "";
@@ -37,7 +41,7 @@ public class RetrieveResults
                     }
                     in.close();
 
-                    fstream = new FileInputStream(util.PropertyFileManager.getValueFromProperty("tmpDir") + dirName + "/outfile");
+                    fstream = new FileInputStream(absolutePath + dirName + "/outfile");
                     in = new DataInputStream(fstream);
                     br = new BufferedReader(new InputStreamReader(in));
                     s = "";
@@ -63,7 +67,7 @@ public class RetrieveResults
                 try
                 {
                     FileInputStream fstream = new FileInputStream(
-                            util.PropertyFileManager.getValueFromProperty("tmpDir") + dirName + "/outfile");
+                            absolutePath + dirName + "/outfile");
                     DataInputStream in = new DataInputStream(fstream);
                     BufferedReader br = new BufferedReader(new InputStreamReader(in));
                     String s = "";
@@ -101,7 +105,7 @@ public class RetrieveResults
 
     public static void main(String[] args)
     {
-        System.out.println(RetrieveResults.retrieveResult("PhylipProtdist:c61e494f-2da2-44e9-9c5b-caf81e7f80d8"));
+        System.out.println(RetrieveResults.retrieveResult("PhylipProtdist:a541013a-0d58-41d4-adcd-d7b24c22203b"));
     }//main ends
 }//Class ends
 

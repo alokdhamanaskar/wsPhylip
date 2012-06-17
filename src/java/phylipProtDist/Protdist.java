@@ -1,4 +1,4 @@
-package phylipWrappers;
+package phylipProtDist;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,12 +10,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.UUID;
+import util.GetAbsolutePath;
 import util.PhylipOutput;
 
 /**
- *
  * @author Alok Dhamanaskar
  * @see    LICENSE (MIT style license file).
+ * 
  */
 public class Protdist
 {
@@ -30,7 +31,10 @@ public class Protdist
     public static String restCode = "";
     
     public static PhylipOutput protdistDefaultParameters(String query, String model)
-    {
+    {       
+        GetAbsolutePath pt = new GetAbsolutePath();
+        String absolutePath = pt.getPath();
+        
         String output = "";
         String status = "Job Successfully Submitted";
         PhylipOutput out = new PhylipOutput();
@@ -53,7 +57,7 @@ public class Protdist
             {
                 //Create a new Directory for Current request in tmp folder
                 String dirName = "PhylipProtdist:" + UUID.randomUUID().toString();
-                String dirNamePath = util.PropertyFileManager.getValueFromProperty("tmpDir") + dirName;
+                String dirNamePath = absolutePath + dirName;
                 boolean success = (new File(dirNamePath)).mkdir();
                 if (success)
                 {
@@ -348,6 +352,9 @@ public class Protdist
             String analyzeMultipleDataSets, String DataWeights, int noOfMultipleDataSets, String inputSequencesInterleaved, 
             double transitionTransversion, String baseFreq, double ProbChangeCat, String geneticCode, String catOfAminoAcids)
     {
+        GetAbsolutePath pt = new GetAbsolutePath();
+        String absolutePath = pt.getPath();
+        
         String output = "";
         String status = "Job Successfully Submitted";
         if (query.equals(""))
@@ -370,7 +377,7 @@ public class Protdist
             {
                 //Create a new Directory for Current request in tmp folder
                 String dirName = "PhylipProtdist:" + UUID.randomUUID().toString();
-                String dirNamePath = util.PropertyFileManager.getValueFromProperty("tmpDir") + dirName;
+                String dirNamePath = absolutePath + dirName;
                 boolean success = (new File(dirNamePath)).mkdir();
                 if (success)
                 {
@@ -481,8 +488,10 @@ public class Protdist
     {
 
         String query = "";
+        GetAbsolutePath pt = new GetAbsolutePath();
+        String absolutePath = pt.getPath();
+        FileInputStream fstream = new FileInputStream(absolutePath +"PhylipSampleInputs/protdist.txt");
 
-        FileInputStream fstream = new FileInputStream("/home/alok/Desktop/tmp/PhylipSampleInputs/protdist/infile");
         DataInputStream in = new DataInputStream(fstream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String strLine;
