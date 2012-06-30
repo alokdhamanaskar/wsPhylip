@@ -11,11 +11,11 @@ About Phylip: PHYLIP is a free package of programs for inferring phylogenies. Re
 
 Programs wrapped so far.
 
-* wsPhylipProtDist: Wraps up Phylip Protdist as a Web service
+* phylip protdist: wsPhylipProtDist
 	* WSDL: http://mango.ctegd.uga.edu/jkissingLab/SWS/webservices/wsPhylipProtDist.wsdl
-* wsPhylipConsense: Wraps up Phylip Consense as a Web service
+* phylip consense: wsPhylipConsense
 	* WSDL: http://mango.ctegd.uga.edu/jkissingLab/SWS/webservices/wsPhylipConsense.wsdl
-* wsPhylipProtPars: Web service that Wraps Phylip Protpars program
+* phylip protpars: wsPhylipProtPars
 	* WSDL: http://mango.ctegd.uga.edu/jkissingLab/SWS/webservices/wsPhylipProtPars.wsdl
-* wsPhylipNeighbor: Web Service that wraps Phylip Neighbor
+* phylip neighbor: wsPhylipNeighbor
 	* WSDL: http://mango.ctegd.uga.edu/jkissingLab/SWS/webservices/wsPhylipNeighbor.wsdl
