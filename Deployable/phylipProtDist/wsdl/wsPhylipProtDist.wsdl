@@ -2,6 +2,9 @@
 <wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://wsannotations.ctegd.uga.edu/services/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsp1_2="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://wsannotations.ctegd.uga.edu/services/">
     <wsdl:types>
         <xsd:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://wsannotations.ctegd.uga.edu/services/">
+            <xsd:element name="ErrorRetrievingJob" nillable="true" type="tns:fault"/>
+            <xsd:element name="ImproperInputsFault" nillable="true" type="tns:fault"/>
+            <xsd:element name="UnexpectedErrorFault" nillable="true" type="tns:fault"/>
             <xsd:element name="getStatus" type="tns:getStatus"/>
             <xsd:element name="getStatusResponse" type="tns:getStatusResponse"/>
             <xsd:element name="protdist" type="tns:protdist"/>
@@ -17,13 +20,12 @@
             </xsd:complexType>
             <xsd:complexType name="retrieveProtDistResultResponse">
                 <xsd:sequence>
-                    <xsd:element minOccurs="0" name="return" type="tns:proteinDistOutput"/>
+                    <xsd:element minOccurs="0" name="proteinDistanceMatrix" type="xsd:string"/>
                 </xsd:sequence>
             </xsd:complexType>
-            <xsd:complexType name="proteinDistOutput">
+            <xsd:complexType name="fault">
                 <xsd:sequence>
-                    <xsd:element minOccurs="0" name="proteinDistanceMatrix" type="xsd:string"/>
-                    <xsd:element minOccurs="0" name="status" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="code" type="xsd:string"/>
                 </xsd:sequence>
             </xsd:complexType>
             <xsd:complexType name="getStatus">
@@ -62,13 +64,7 @@
             </xsd:complexType>
             <xsd:complexType name="protdistResponse">
                 <xsd:sequence>
-                    <xsd:element minOccurs="0" name="return" type="tns:phylipOutput"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="phylipOutput">
-                <xsd:sequence>
                     <xsd:element minOccurs="0" name="jobId" type="xsd:string"/>
-                    <xsd:element minOccurs="0" name="status" type="xsd:string"/>
                 </xsd:sequence>
             </xsd:complexType>
             <xsd:complexType name="protdistDefaultParameters">
@@ -79,7 +75,7 @@
             </xsd:complexType>
             <xsd:complexType name="protdistDefaultParametersResponse">
                 <xsd:sequence>
-                    <xsd:element minOccurs="0" name="return" type="tns:phylipOutput"/>
+                    <xsd:element minOccurs="0" name="jobId" type="xsd:string"/>
                 </xsd:sequence>
             </xsd:complexType>
         </xsd:schema>
@@ -89,6 +85,15 @@
     </wsdl:message>
     <wsdl:message name="retrieveProtDistResultResponse">
         <wsdl:part name="parameters" element="tns:retrieveProtDistResultResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ErrorRetrievingJob">
+        <wsdl:part name="fault" element="tns:ErrorRetrievingJob"/>
+    </wsdl:message>
+    <wsdl:message name="UnexpectedErrorEx">
+        <wsdl:part name="fault" element="tns:UnexpectedErrorFault"/>
+    </wsdl:message>
+    <wsdl:message name="ImproperInputEx">
+        <wsdl:part name="fault" element="tns:ImproperInputsFault"/>
     </wsdl:message>
     <wsdl:message name="getStatus">
         <wsdl:part name="parameters" element="tns:getStatus"/>
@@ -112,18 +117,25 @@
         <wsdl:operation name="retrieveProtDistResult">
             <wsdl:input message="tns:retrieveProtDistResult" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtDist/retrieveProtDistResultRequest"/>
             <wsdl:output message="tns:retrieveProtDistResultResponse" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtDist/retrieveProtDistResultResponse"/>
+            <wsdl:fault message="tns:ErrorRetrievingJob" name="ErrorRetrievingJob" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtDist/retrieveProtDistResult/Fault/ErrorRetrievingJob"/>
+            <wsdl:fault message="tns:UnexpectedErrorEx" name="UnexpectedErrorEx" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtDist/retrieveProtDistResult/Fault/UnexpectedErrorEx"/>
+            <wsdl:fault message="tns:ImproperInputEx" name="ImproperInputEx" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtDist/retrieveProtDistResult/Fault/ImproperInputEx"/>
         </wsdl:operation>
         <wsdl:operation name="getStatus">
             <wsdl:input message="tns:getStatus" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtDist/getStatusRequest"/>
             <wsdl:output message="tns:getStatusResponse" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtDist/getStatusResponse"/>
+            <wsdl:fault message="tns:ImproperInputEx" name="ImproperInputEx" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtDist/getStatus/Fault/ImproperInputEx"/>
         </wsdl:operation>
         <wsdl:operation name="protdist">
             <wsdl:input message="tns:protdist" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtDist/protdistRequest"/>
             <wsdl:output message="tns:protdistResponse" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtDist/protdistResponse"/>
+            <wsdl:fault message="tns:ImproperInputEx" name="ImproperInputEx" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtDist/protdist/Fault/ImproperInputEx"/>
         </wsdl:operation>
         <wsdl:operation name="protdistDefaultParameters">
             <wsdl:input message="tns:protdistDefaultParameters" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtDist/protdistDefaultParametersRequest"/>
             <wsdl:output message="tns:protdistDefaultParametersResponse" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtDist/protdistDefaultParametersResponse"/>
+            <wsdl:fault message="tns:UnexpectedErrorEx" name="UnexpectedErrorEx" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtDist/protdistDefaultParameters/Fault/UnexpectedErrorEx"/>
+            <wsdl:fault message="tns:ImproperInputEx" name="ImproperInputEx" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtDist/protdistDefaultParameters/Fault/ImproperInputEx"/>
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="wsPhylipProtDistPortBinding" type="tns:wsPhylipProtDistPortType">
@@ -136,6 +148,15 @@
             <wsdl:output>
                 <soap:body use="literal"/>
             </wsdl:output>
+            <wsdl:fault name="ErrorRetrievingJob">
+                <soap:fault use="literal" name="ErrorRetrievingJob"/>
+            </wsdl:fault>
+            <wsdl:fault name="UnexpectedErrorEx">
+                <soap:fault use="literal" name="UnexpectedErrorEx"/>
+            </wsdl:fault>
+            <wsdl:fault name="ImproperInputEx">
+                <soap:fault use="literal" name="ImproperInputEx"/>
+            </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="getStatus">
             <soap:operation soapAction="" style="document"/>
@@ -145,6 +166,9 @@
             <wsdl:output>
                 <soap:body use="literal"/>
             </wsdl:output>
+            <wsdl:fault name="ImproperInputEx">
+                <soap:fault use="literal" name="ImproperInputEx"/>
+            </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="protdist">
             <soap:operation soapAction="" style="document"/>
@@ -154,6 +178,9 @@
             <wsdl:output>
                 <soap:body use="literal"/>
             </wsdl:output>
+            <wsdl:fault name="ImproperInputEx">
+                <soap:fault use="literal" name="ImproperInputEx"/>
+            </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="protdistDefaultParameters">
             <soap:operation soapAction="" style="document"/>
@@ -163,6 +190,12 @@
             <wsdl:output>
                 <soap:body use="literal"/>
             </wsdl:output>
+            <wsdl:fault name="UnexpectedErrorEx">
+                <soap:fault use="literal" name="UnexpectedErrorEx"/>
+            </wsdl:fault>
+            <wsdl:fault name="ImproperInputEx">
+                <soap:fault use="literal" name="ImproperInputEx"/>
+            </wsdl:fault>
         </wsdl:operation>
     </wsdl:binding>
     <wsdl:service name="wsPhylipProtDist">

@@ -11,7 +11,7 @@ import util.UnexpectedErrorEx;
  * @author Alok Dhamanaskar
  * @see    LICENSE (MIT style license file).
  * 
- * <br/><br/>Class that wraps the Phylip Protpars program.
+ * <br/><br/>Class that wraps the Phylip ProtPars program.
  */
 public class ProtPars
 {   
@@ -19,8 +19,17 @@ public class ProtPars
     public static String partCodeG = "";
     
 
+    /**
+     * Invokes Phylip ProtPors and returns the Job Identifier.
+     * @param query Multiple Aligned Sequences
+     * @param geneticCode The genetic code to use 
+     * @param threshold Threshold for Threshold parsimony
+     * @return Job ID
+     * @throws UnexpectedErrorEx
+     * @throws ImproperInputEx 
+     */
     public static String runProtPars
-            (String query, String geneticCode, Double threshold, boolean search4BestTree) 
+            (String query, String geneticCode, Double threshold) 
             throws UnexpectedErrorEx, ImproperInputEx
     {
         //Get ABsolutePath for creating files
@@ -29,7 +38,7 @@ public class ProtPars
         
         try
         {
-            if (validate( query, search4BestTree, threshold, geneticCode))
+            if (validate( query, threshold, geneticCode))
             {
                 //Create a new Directory for Current request in tmp folder
                 String dirName = "PhylipProtpars:" + UUID.randomUUID().toString();
@@ -86,9 +95,17 @@ public class ProtPars
 
     }//runNeighbor
   
-       
+    /**
+     * Validates inputs to Phylip ProtPars and generates part of the code for execution.
+     * The inputs currently supported is only  sub set of inputs for the Phylip ProtPars Program.
+     * @param query Multiple Aligned Sequences
+     * @param geneticCode The genetic code to use 
+     * @param threshold Threshold for Threshold parsimony
+     * @return True if all the inputs are valid else false.
+     * @throws ImproperInputEx 
+     */   
     private static boolean validate
-            (String query, boolean search4BestTree, Double threshold, String geneticCode) 
+            (String query, Double threshold, String geneticCode) 
             throws ImproperInputEx 
     {
         if (query == null) query = "";
@@ -125,10 +142,7 @@ public class ProtPars
             }//switch
         
         }//if
-                    
-        if (search4BestTree == false)
-            partCodeG += "U\n";
-            
+                               
         if(threshold != null)
             if (threshold >= 1.0)
                 partCodeG += "T\n" + threshold + "\n";
@@ -157,8 +171,7 @@ public class ProtPars
         }
         in.close();
 
-        out.println(runProtPars(query, "Mitochondrial", 1.0, true ));
-        
+        out.println(runProtPars(query, "Mitochondrial", 1.0 ));
 
         
     }// main ends

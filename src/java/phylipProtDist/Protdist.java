@@ -11,7 +11,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.UUID;
 import util.GetAbsolutePath;
-import util.PhylipOutput;
+import util.ImproperInputEx;
+import util.RunPhylipOutput;
+import util.UnexpectedErrorEx;
 
 /**
  * @author Alok Dhamanaskar
@@ -20,34 +22,25 @@ import util.PhylipOutput;
  */
 public class Protdist
 {
-    public static class ProteinDistOutput
-    {
-        public String proteinDistanceMatrix;
-        public String status;
-    }
     
     public static String errorMsg="";
     public static String partCodeG = "";
     public static String restCode = "";
     
-    public static PhylipOutput protdistDefaultParameters(String query, String model)
+    public static String protdistDefaultParameters(String query, String model) throws ImproperInputEx, UnexpectedErrorEx
     {       
         GetAbsolutePath pt = new GetAbsolutePath();
         String absolutePath = pt.getPath();
         
         String output = "";
-        String status = "Job Successfully Submitted";
-        PhylipOutput out = new PhylipOutput();
+        
+        if (query.equals(""))
+        {
+            throw new ImproperInputEx("Job not Submitted: Query Cannot be Null");
+        }
+        
         try
         {
-            if (query.equals(""))
-            {
-                out.jobId = output;
-                status = "Job not Submitted: Query Cannot be Null";
-                out.status = status;
-                return out;
-            }
-                    
             if (model.equals(""))
                 model = "JTT";
             if (model.equalsIgnoreCase("JTT") || model.equalsIgnoreCase("PMB")
@@ -92,6 +85,7 @@ public class Protdist
                 Process p = rt.exec("sh " + dirNamePath + "/protdist.sh");
 
                 output = dirName;
+                return output;
             }//end if
             else
             {
@@ -100,22 +94,19 @@ public class Protdist
                         + "PMB (Henikoff/Tillier PMB matrix), "
                         + "PAM (Dayhoff PAM matrix), "
                         + "kimura, Similarity Table and Categories model";
-                status = errorMsg;
+                throw new ImproperInputEx(errorMsg);
             }//end else
 
-
-        } catch (Exception ex)
+        }//try
+        catch (ImproperInputEx ex)
         {
-            System.out.println("Program failed due to : " + ex);
-            status = "Program failed due to : " + ex;
-            output = "";
-
-        } finally
+            throw new ImproperInputEx("Program failed due to : " + ex);
+        }//catch
+        catch (Exception e)
         {
-            out.jobId = output;
-            out.status = status;
-            return out;
-        }
+            throw new UnexpectedErrorEx(e.getMessage());
+        }//catch 
+
 
     }
 
@@ -346,25 +337,21 @@ public class Protdist
             return false;
     }
 
-    public static PhylipOutput protdist(String query, String model, String GammaDistrOfRates,
+    public static String protdist(String query, String model, String GammaDistrOfRates,
             double CoeffOfVariation, double fracOfInvSites, String oneCatOfSubRates,
             int noOfCat, String rateForEachCat, String categoriesFile, String UseWts4Posn, String weightsFile,
             String analyzeMultipleDataSets, String DataWeights, int noOfMultipleDataSets, String inputSequencesInterleaved, 
-            double transitionTransversion, String baseFreq, double ProbChangeCat, String geneticCode, String catOfAminoAcids)
+            double transitionTransversion, String baseFreq, double ProbChangeCat, String geneticCode, String catOfAminoAcids) throws ImproperInputEx
     {
         GetAbsolutePath pt = new GetAbsolutePath();
         String absolutePath = pt.getPath();
         
         String output = "";
-        String status = "Job Successfully Submitted";
         if (query.equals(""))
         {
-            PhylipOutput out = new PhylipOutput();
-            out.jobId = output;
-            status = "Job not Submitted: Query Cannot be Null";
-            out.status = status;
-            return out;
+            throw new ImproperInputEx("Job not Submitted: Query Cannot be Null");
         }
+        
         try
         {
             //Are the inputs entered valid
@@ -433,21 +420,22 @@ public class Protdist
             }//end if
             else
             {
-                status = errorMsg;
+                throw new ImproperInputEx(errorMsg);
             }//end else
 
 
-        } catch (Exception ex)
+        } 
+        catch (ImproperInputEx ex)
         {
-            System.out.println("Program failed due to : " + ex);
-            output = "";
-            status = "Program failed due to : " + ex;
-        } finally
+            throw new ImproperInputEx("Program failed due to : " + ex);
+        }//catch
+        catch (Exception e)
         {
-            PhylipOutput out = new PhylipOutput();
-            out.jobId = output;
-            out.status = status;
-            return out;
+            throw new UnexpectedErrorEx(e.getMessage());
+        }//catch 
+        finally
+        {
+            return output;
         }
 
     }
@@ -484,7 +472,7 @@ public class Protdist
         return partCode;
 
     }
-    public static void main(String[] args) throws FileNotFoundException, IOException
+    public static void main(String[] args) throws FileNotFoundException, IOException, ImproperInputEx
     {
 
         String query = "";
@@ -526,7 +514,7 @@ public class Protdist
         String geneticCode = "Yeast mitochondrial"; 
         String catOfAminoAcids = "Chemical";        
 
-        //        PhylipOutput out1 = 
+        //        RunPhylipOutput out1 = 
         //                protdist(query, model, GammaDistrOfRates, CoeffOfVariation, fracOfInvSites,
         //                oneCatOfSubRates, noOfCat, rateForEachCat, categoriesFile, UseWts4Posn, weightsFile,
         //                analyzeMultipleDataSets, DataWeights, noOfMultipleDataSets, inputSequencesInterleaved,
@@ -555,7 +543,7 @@ public class Protdist
         geneticCode = ""; 
         catOfAminoAcids = "";        
         
-//        PhylipOutput out1 = 
+//        RunPhylipOutput out1 = 
 //                protdist(query, model, GammaDistrOfRates, CoeffOfVariation, fracOfInvSites,
 //                oneCatOfSubRates, noOfCat, rateForEachCat, categoriesFile, UseWts4Posn, weightsFile,
 //                analyzeMultipleDataSets, DataWeights, noOfMultipleDataSets, inputSequencesInterleaved,
@@ -584,7 +572,7 @@ public class Protdist
         geneticCode = ""; 
         catOfAminoAcids = "";        
         
-//        PhylipOutput out3 = 
+//        RunPhylipOutput out3 = 
 //                protdist(query, model, GammaDistrOfRates, CoeffOfVariation, fracOfInvSites,
 //                oneCatOfSubRates, noOfCat, rateForEachCat, categoriesFile, UseWts4Posn, weightsFile,
 //                analyzeMultipleDataSets, DataWeights, noOfMultipleDataSets, inputSequencesInterleaved,
@@ -613,7 +601,7 @@ public class Protdist
         geneticCode = ""; 
         catOfAminoAcids = "";        
         
-//        PhylipOutput out4 = 
+//        RunPhylipOutput out4 = 
 //                protdist(query, model, GammaDistrOfRates, CoeffOfVariation, fracOfInvSites,
 //                oneCatOfSubRates, noOfCat, rateForEachCat, categoriesFile, UseWts4Posn, weightsFile,
 //                analyzeMultipleDataSets, DataWeights, noOfMultipleDataSets, inputSequencesInterleaved,
@@ -642,13 +630,12 @@ public class Protdist
         geneticCode = ""; 
         catOfAminoAcids = "";        
         
-        PhylipOutput out5 = 
+        System.out.println( 
                 protdist(query, model, GammaDistrOfRates, CoeffOfVariation, fracOfInvSites,
                 oneCatOfSubRates, noOfCat, rateForEachCat, categoriesFile, UseWts4Posn, weightsFile,
                 analyzeMultipleDataSets, DataWeights, noOfMultipleDataSets, inputSequencesInterleaved,
-                transitionTransversion,baseFreq, ProbChangeCat, geneticCode, catOfAminoAcids);
-        System.out.println(out5.jobId + "-- " + out5.status);
-        
+                transitionTransversion,baseFreq, ProbChangeCat, geneticCode, catOfAminoAcids)
+        );
         
     }// main ends
 

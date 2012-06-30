@@ -5,11 +5,7 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
-import phylipConsense.Consense;
-import util.CheckJobStatus;
-import util.ImproperInputEx;
-import util.RetrieveResults;
-import util.UnexpectedErrorEx;
+import util.*;
 
 /**
  * @author Alok Dhamanaskar (alokd@uga.edu)
@@ -74,19 +70,31 @@ public class NeighborWS {
     
     @WebMethod(operationName = "getStatus")
     @WebResult(name = "jobStatus")
-    public String getStatus(@WebParam(name = "jobId") String jobId)
+    public String getStatus(@WebParam(name = "jobId") String jobId) throws ImproperInputEx
     {
+        if(jobId == null) 
+            throw new ImproperInputEx("Job Id cannot be null");
+        
+        jobId = jobId.trim();
+
+        if(jobId.equals("")) 
+            throw new ImproperInputEx("Job Id cannot be null");        
+        
         return CheckJobStatus.checkStatus(jobId);
     }//getStatus
 
 
     @WebMethod(operationName = "retrieveNeighborResult")
-    public Consense.ConsenseOutput retrieveNeighborResult(@WebParam(name = "jobId") String jobId)
+    public util.RunPhylipOutput.PhylipOutput retrieveNeighborResult(@WebParam(name = "jobId") String jobId) 
+            throws UnexpectedErrorEx, ErrorRetrievingJob, ImproperInputEx
     {   
-        if(jobId == null)
-            jobId = "";
-        Consense.ConsenseOutput out  = (Consense.ConsenseOutput) RetrieveResults.retrieveResult(jobId);
-        return out;
+        if(jobId == null) throw new ImproperInputEx("Job Id cannot be null");
+        
+        jobId = jobId.trim();
+
+        if(jobId.equals("")) throw new ImproperInputEx("Job Id cannot be null");        
+        
+        return RetrieveResults.retrieveResult(jobId);
     }//retrieveNeighborResult 
 
 }//NeighborWS

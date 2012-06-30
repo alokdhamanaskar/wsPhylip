@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://wsannotations.ctegd.uga.edu/services/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsp1_2="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://wsannotations.ctegd.uga.edu/services/">
+    <wsdl:types>
+        <xsd:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://wsannotations.ctegd.uga.edu/services/">
+            <xsd:element name="ErrorRetrievingJob" nillable="true" type="tns:fault"/>
+            <xsd:element name="ImproperInputsFault" nillable="true" type="tns:fault"/>
+            <xsd:element name="UnexpectedErrorFault" nillable="true" type="tns:fault"/>
+            <xsd:element name="getStatus" type="tns:getStatus"/>
+            <xsd:element name="getStatusResponse" type="tns:getStatusResponse"/>
+            <xsd:element name="retrieveProtParsResult" type="tns:retrieveProtParsResult"/>
+            <xsd:element name="retrieveProtParsResultResponse" type="tns:retrieveProtParsResultResponse"/>
+            <xsd:element name="runProtPars" type="tns:runProtPars"/>
+            <xsd:element name="runProtParsResponse" type="tns:runProtParsResponse"/>
+            <xsd:complexType name="getStatus">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="jobId" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="getStatusResponse">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="jobStatus" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="fault">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="code" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="runProtPars">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="multipleAlignedSequences" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="geneticCode" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="threshold" type="xsd:double"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="runProtParsResponse">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="jobId" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="retrieveProtParsResult">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="jobId" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="retrieveProtParsResultResponse">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="return" type="tns:phylipOutput"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="phylipOutput">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="consenseTree" type="xsd:string"/>
+                    <xsd:element minOccurs="0" name="outTree" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="getStatus">
+        <wsdl:part name="parameters" element="tns:getStatus"/>
+    </wsdl:message>
+    <wsdl:message name="getStatusResponse">
+        <wsdl:part name="parameters" element="tns:getStatusResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ImproperInputEx">
+        <wsdl:part name="fault" element="tns:ImproperInputsFault"/>
+    </wsdl:message>
+    <wsdl:message name="runProtPars">
+        <wsdl:part name="parameters" element="tns:runProtPars"/>
+    </wsdl:message>
+    <wsdl:message name="runProtParsResponse">
+        <wsdl:part name="parameters" element="tns:runProtParsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="UnexpectedErrorEx">
+        <wsdl:part name="fault" element="tns:UnexpectedErrorFault"/>
+    </wsdl:message>
+    <wsdl:message name="retrieveProtParsResult">
+        <wsdl:part name="parameters" element="tns:retrieveProtParsResult"/>
+    </wsdl:message>
+    <wsdl:message name="retrieveProtParsResultResponse">
+        <wsdl:part name="parameters" element="tns:retrieveProtParsResultResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ErrorRetrievingJob">
+        <wsdl:part name="fault" element="tns:ErrorRetrievingJob"/>
+    </wsdl:message>
+    <wsdl:portType name="wsPhylipProtParsPortType">
+        <wsdl:operation name="getStatus">
+            <wsdl:input message="tns:getStatus" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtPars/getStatusRequest"/>
+            <wsdl:output message="tns:getStatusResponse" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtPars/getStatusResponse"/>
+            <wsdl:fault message="tns:ImproperInputEx" name="ImproperInputEx" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtPars/getStatus/Fault/ImproperInputEx"/>
+        </wsdl:operation>
+        <wsdl:operation name="runProtPars">
+            <wsdl:input message="tns:runProtPars" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtPars/runProtParsRequest"/>
+            <wsdl:output message="tns:runProtParsResponse" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtPars/runProtParsResponse"/>
+            <wsdl:fault message="tns:UnexpectedErrorEx" name="UnexpectedErrorEx" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtPars/runProtPars/Fault/UnexpectedErrorEx"/>
+            <wsdl:fault message="tns:ImproperInputEx" name="ImproperInputEx" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtPars/runProtPars/Fault/ImproperInputEx"/>
+        </wsdl:operation>
+        <wsdl:operation name="retrieveProtParsResult">
+            <wsdl:input message="tns:retrieveProtParsResult" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtPars/retrieveProtParsResultRequest"/>
+            <wsdl:output message="tns:retrieveProtParsResultResponse" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtPars/retrieveProtParsResultResponse"/>
+            <wsdl:fault message="tns:ErrorRetrievingJob" name="ErrorRetrievingJob" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtPars/retrieveProtParsResult/Fault/ErrorRetrievingJob"/>
+            <wsdl:fault message="tns:UnexpectedErrorEx" name="UnexpectedErrorEx" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtPars/retrieveProtParsResult/Fault/UnexpectedErrorEx"/>
+            <wsdl:fault message="tns:ImproperInputEx" name="ImproperInputEx" wsaw:Action="http://wsannotations.ctegd.uga.edu/services/wsPhylipProtPars/retrieveProtParsResult/Fault/ImproperInputEx"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="wsPhylipProtParsPortBinding" type="tns:wsPhylipProtParsPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getStatus">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ImproperInputEx">
+                <soap:fault use="literal" name="ImproperInputEx"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="runProtPars">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UnexpectedErrorEx">
+                <soap:fault use="literal" name="UnexpectedErrorEx"/>
+            </wsdl:fault>
+            <wsdl:fault name="ImproperInputEx">
+                <soap:fault use="literal" name="ImproperInputEx"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="retrieveProtParsResult">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ErrorRetrievingJob">
+                <soap:fault use="literal" name="ErrorRetrievingJob"/>
+            </wsdl:fault>
+            <wsdl:fault name="UnexpectedErrorEx">
+                <soap:fault use="literal" name="UnexpectedErrorEx"/>
+            </wsdl:fault>
+            <wsdl:fault name="ImproperInputEx">
+                <soap:fault use="literal" name="ImproperInputEx"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="wsPhylipProtPars">
+        <wsdl:port name="wsPhylipProtParsPort" binding="tns:wsPhylipProtParsPortBinding">
+            <soap:address location="http://wsannotations.ctegd.uga.edu/axis2/services/wsPhylipProtPars.wsPhylipProtParsPort/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

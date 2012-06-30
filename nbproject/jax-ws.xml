@@ -10,6 +10,9 @@
     <service name="wsPhylipNeighbor">
       <implementation-class>phylipNeighbor.NeighborWS</implementation-class>
     </service>
+    <service name="wsPhylipProtPars">
+      <implementation-class>phylipProtPars.ProtParsWS</implementation-class>
+    </service>
   </services>
   <clients>
   </clients>

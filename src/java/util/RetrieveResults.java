@@ -1,30 +1,31 @@
+
 package util;
 
-import phylipConsense.Consense;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import phylipConsense.Consense.ConsenseOutput;
-import phylipProtDist.Protdist;
+import util.RunPhylipOutput.PhylipOutput;
 
 /**
+ * @author Alok Dhamanaskar (alokd@uga.edu)
+ * @see LICENSE (MIT style license file). 
  *
- * @author Alok Dhamanaskar
+ * <br/><br/> The class the provides methods for retrieving the results of execution of different 
+ * Phylip programs
  */
 public class RetrieveResults
 {
 
-    public static Object retrieveResult(String dirName)
+    public static PhylipOutput retrieveResult(String dirName) throws UnexpectedErrorEx, ErrorRetrievingJob
     {
         GetAbsolutePath pt = new GetAbsolutePath();
         String absolutePath = pt.getPath();
-        String output = "";
-        String status = "Success";
-        Consense.ConsenseOutput consenseOut = new Consense.ConsenseOutput();
+        
+        PhylipOutput out = new PhylipOutput();
         
         String outcome = CheckJobStatus.checkStatus(dirName);
-        status = outcome;
+
         if (outcome.equalsIgnoreCase("FINISHED"))
         {
             if (dirName.contains("PhylipConsense") || dirName.contains("PhylipNeighbor") || dirName.contains("PhylipProtpars"))
@@ -38,32 +39,78 @@ public class RetrieveResults
                     String s = "";
                     while ((s = br.readLine()) != null)
                     {
-                        consenseOut.outTree += s + "\n";
+                        out.outTree += s + "\n";
                     }
                     in.close();
 
                     fstream = new FileInputStream(absolutePath + dirName + "/outfile");
                     in = new DataInputStream(fstream);
                     br = new BufferedReader(new InputStreamReader(in));
-                    s = "";
 
                     while ((s = br.readLine()) != null)
                     {
-                        consenseOut.consenseTree += s + "\n";
+                        out.consenseTree += s + "\n";
                     }
                     in.close();
-                    consenseOut.status= status;
-                } catch (Exception e)
+                    
+                    return out;
+                }//try
+                catch (Exception e)
                 {
                     System.out.println("Exception Occurred " + e);
-                    consenseOut.status = "There was an error running this job : " + e;
-                }
-                finally
-                {
-                    return consenseOut;
-                }
+                    throw new UnexpectedErrorEx("The job could not be retrieved..!");
+                }//catch
                
-            } else if (dirName.contains("PhylipProtdist"))
+            }//if 
+            else
+            {
+                throw new ErrorRetrievingJob("Error retrieving Job : Invalid Job Id");
+
+            }//else
+            
+        }//if
+        else if (outcome.equalsIgnoreCase("ERROR"))
+        {
+           throw new ErrorRetrievingJob("The job could not be retrieved..!");
+        }//else if
+        else if (outcome.equalsIgnoreCase("RUNNING"))
+        {
+            throw new ErrorRetrievingJob("The job is still running..!");
+        }//else if
+        else if (outcome.equalsIgnoreCase("Job Not Found"))
+        {
+            throw new ErrorRetrievingJob("The job could not be found..!");
+        }//else if
+        else
+        {
+            throw new UnexpectedErrorEx("Unexpected error occurred..!");
+        }//else
+        
+    }//retrieveResult
+
+    
+    /**
+     * Retrieves the result of Phylip ProtDist given the Job Id
+     * @param dirName Job Identifier
+     * @return Protein distance Matrix
+     * @throws UnexpectedErrorEx
+     * @throws ErrorRetrievingJob 
+     */
+    public static String retrieveProtdistResult(String dirName) 
+            throws UnexpectedErrorEx, ErrorRetrievingJob
+    {
+        GetAbsolutePath pt = new GetAbsolutePath();
+        String absolutePath = pt.getPath();
+        String output = "";
+        
+        if (dirName == null || dirName.equals(""))
+            throw new ErrorRetrievingJob("Job Id cannot be null..!");
+        
+        String outcome = CheckJobStatus.checkStatus(dirName);
+
+        if (outcome.equalsIgnoreCase("FINISHED"))
+        {
+            if (dirName.contains("PhylipProtdist"))
             {
                 try
                 {
@@ -71,46 +118,55 @@ public class RetrieveResults
                             absolutePath + dirName + "/outfile");
                     DataInputStream in = new DataInputStream(fstream);
                     BufferedReader br = new BufferedReader(new InputStreamReader(in));
-                    String s = "";
+                    String s;
                     while ((s = br.readLine()) != null)
                     {
                         output += s + "\n";
                     }
                     in.close();
 
-                    in.close();
-                } catch (Exception e)
+                    return output;
+                }//try 
+                catch (Exception e)
                 {
                     System.out.println("Exception Occurred " + e);
-                    output = "There was an error running this job";
-                }
+                    throw new UnexpectedErrorEx("The job could not be retrieved..!");
+                }//catch
 
-            }
+            }//if
+            else
+            {
+                throw new ErrorRetrievingJob("Invalid JobId..!");
+            }//else
 
-
-        } else if (outcome.equalsIgnoreCase("ERROR"))
+        } 
+        else if (outcome.equalsIgnoreCase("ERROR"))
         {
-            status = "There was an error running this job";
-        } else if (outcome.equalsIgnoreCase("RUNNING"))
+           throw new ErrorRetrievingJob("The job could not be retrieved..!");
+        } 
+        else if (outcome.equalsIgnoreCase("RUNNING"))
         {
-            status = "The job is still running";
-        } else
-        {
-            status = outcome;
+            throw new ErrorRetrievingJob("The job is still running..!");
         }
-        Protdist.ProteinDistOutput out = new Protdist.ProteinDistOutput();
-        out.proteinDistanceMatrix = output;
-        out.status = status;
+        else
+        {
+            throw new UnexpectedErrorEx("Unexpected error occurred, The job could not be retrieved..!");
+        }
         
-        return out;
-    }//method retrieveResult ends
-
-    public static void main(String[] args)
+    }//retrieveProtDistResult
+    
+    public static void main(String[] args) throws UnexpectedErrorEx, ErrorRetrievingJob
     {
-        ConsenseOutput o = (ConsenseOutput) RetrieveResults.retrieveResult("PhylipNeighbor:22f0a6d9-58d0-427c-b3eb-716ea16ed87d");
-        System.out.println(o.consenseTree);
+        //Test code
         
-        System.out.println(o.outTree);
+        PhylipOutput o = RetrieveResults.retrieveResult("PhylipProtpars:5bb3c0dc-6ee7-406c-9a45-bb296eac8771");
+        System.out.println(o.consenseTree + "\n\n" + o.outTree);
+        
+        System.out.println();
+        
+        //System.out.println(retrieveProtdistResult("PhylipProtdist:203d6666-92b2-42a6-83ad-4ab079c2848e"));
+        
+        
     }//main ends
 }//Class ends
 

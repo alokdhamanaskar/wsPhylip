@@ -2,7 +2,7 @@ package phylipConsense;
 
 import java.io.*;
 import java.util.UUID;
-import util.PhylipOutput;
+import util.RunPhylipOutput;
 import static java.lang.System.out;
 import util.GetAbsolutePath;
 
@@ -19,21 +19,14 @@ public class Consense
 
     public static String errorMsg="Job Submitted successfully";
     public static String partCodeG = "";
-
-    public static class ConsenseOutput
-    {
-        public String consenseTree;
-        public String outTree;
-        public String status;
-    }//ConsenseOutput
-        
+      
     /**
      * Invokes Phylip Consense program for Rooted Trees
      * @param query
      * @param consensusType The consensus type (MRe, strict, MR, Ml)
      * @return A Job identifier for the web service job submitted
      */
-    public static PhylipOutput consenseRootedTrees(String query, String consensusType)
+    public static RunPhylipOutput consenseRootedTrees(String query, String consensusType)
     {
         GetAbsolutePath pt = new GetAbsolutePath();
         String absolutePath = pt.getPath();
@@ -41,7 +34,7 @@ public class Consense
         Runtime rt = Runtime.getRuntime();
         String output = "";
         String status = "Job Successfully Submitted";
-        PhylipOutput out = new PhylipOutput();
+        RunPhylipOutput out = new RunPhylipOutput();
         if (query.equals(""))
         {
             out.jobId = output;
@@ -123,7 +116,7 @@ public class Consense
      * @param nofOutgroup Number of OutGroups
      * @return A Job identifier for the web service job submitted
      */
-    public static PhylipOutput consenseNonRootedTrees(String query, String consensusType, String OutgroupRoot, int nofOutgroup)
+    public static RunPhylipOutput consenseNonRootedTrees(String query, String consensusType, String OutgroupRoot, int nofOutgroup)
     {
         GetAbsolutePath pt = new GetAbsolutePath();
         String absolutePath = pt.getPath();
@@ -131,7 +124,7 @@ public class Consense
         Runtime rt = Runtime.getRuntime();
         String output = "";
         String status = "Job Successfully Submitted";
-        PhylipOutput out = new PhylipOutput();
+        RunPhylipOutput out = new RunPhylipOutput();
 
         if (query.equals(""))
         {
@@ -267,10 +260,10 @@ public class Consense
         }
         in.close();
                    
-        PhylipOutput out1 = Consense.consenseNonRootedTrees(query, "strict", "yes",3);
+        RunPhylipOutput out1 = Consense.consenseNonRootedTrees(query, "strict", "yes",3);
         out.println(out1.jobId + "-- " + out1.status);
 
-//        PhylipOutput out2 = Consense.consenseRootedTrees(query, "mr");
+//        RunPhylipOutput out2 = Consense.consenseRootedTrees(query, "mr");
 //        out.println(out2.jobId + "-- " + out2.status);
 
     }//main

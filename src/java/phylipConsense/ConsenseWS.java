@@ -7,6 +7,7 @@ import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
+import util.*;
 
 /**
  *
@@ -20,14 +21,14 @@ import javax.jws.WebResult;
         name            = "wsPhylipConsense", 
         targetNamespace = "http://wsannotations.ctegd.uga.edu/services/",
         serviceName     = "wsPhylipConsense",
-        portName        = "wsPhylipConsensePort"//,
-        //wsdlLocation    = "wsPhylipConsense.wsdl"
+        portName        = "wsPhylipConsensePort",
+        wsdlLocation    = "wsPhylipConsense.wsdl"
         )
 public class ConsenseWS
 {
 
     @WebMethod(operationName = "consenseRootedTrees")
-    public util.PhylipOutput consenseRootedTrees(
+    public util.RunPhylipOutput consenseRootedTrees(
             @WebParam(name = "query") String query, 
             @WebParam(name = "consensusType") String consensusType
             )
@@ -42,7 +43,7 @@ public class ConsenseWS
 
 
     @WebMethod(operationName = "consenseNonRootedTrees")
-    public util.PhylipOutput consenseNonRootedTrees(
+    public util.RunPhylipOutput consenseNonRootedTrees(
             @WebParam(name = "query") String query, 
             @WebParam(name = "consensusType") String consensusType, 
             @WebParam(name = "OutgroupRoot") String OutgroupRoot, 
@@ -62,18 +63,32 @@ public class ConsenseWS
 
 
     @WebMethod(operationName = "retrieveConsenseResult")
-    public Consense.ConsenseOutput RetrieveConsenseDistResult(@WebParam(name = "jobId") String jobId)
+    public util.RunPhylipOutput.PhylipOutput RetrieveConsenseDistResult(@WebParam(name = "jobId") String jobId) 
+            throws UnexpectedErrorEx, ErrorRetrievingJob, ImproperInputEx
     {   
-        if(jobId == null)
-            jobId = "";
-        Consense.ConsenseOutput out  = (Consense.ConsenseOutput) RetrieveResults.retrieveResult(jobId);
-        return out;
+        if(jobId == null) 
+            throw new ImproperInputEx("Job Id cannot be null");
+        
+        jobId = jobId.trim();
+
+        if(jobId.equals("")) 
+            throw new ImproperInputEx("Job Id cannot be null");        
+
+        return RetrieveResults.retrieveResult(jobId);
     }//RetrieveConsenseDistResult    
     
     @WebMethod(operationName = "getStatus")
     @WebResult(name = "jobStatus")
-    public String getStatus(@WebParam(name = "jobId") String jobId) 
+    public String getStatus(@WebParam(name = "jobId") String jobId) throws ImproperInputEx 
     {
+        if(jobId == null) 
+            throw new ImproperInputEx("Job Id cannot be null");
+        
+        jobId = jobId.trim();
+
+        if(jobId.equals("")) 
+            throw new ImproperInputEx("Job Id cannot be null");        
+        
         return CheckJobStatus.checkStatus(jobId);
     }//getStatus
     

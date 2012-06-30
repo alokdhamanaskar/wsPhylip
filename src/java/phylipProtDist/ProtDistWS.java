@@ -7,6 +7,7 @@ import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
+import util.*;
 
 /**
  *
@@ -20,12 +21,13 @@ import javax.jws.WebResult;
         targetNamespace = "http://wsannotations.ctegd.uga.edu/services/",
         serviceName     = "wsPhylipProtDist",
         portName        = "wsPhylipProtDistPort"//,
-        //wsdlLocation    = "wsPhylipProtDist.wsdl"
+//        wsdlLocation    = "wsPhylipProtDist.wsdl"
         )
 public class ProtDistWS
 {
     @WebMethod(operationName = "protdist")
-    public util.PhylipOutput protdist(
+    @WebResult(name = "jobId")
+    public String protdist(
                     @WebParam(name = "query") String query, 
                     @WebParam(name = "model") String model, 
                     @WebParam(name = "GammaDistrOfRates") String GammaDistrOfRates,
@@ -46,7 +48,7 @@ public class ProtDistWS
                     @WebParam(name = "ProbChangeCat")Double ProbChangeCat,
                     @WebParam(name = "geneticCode") String geneticCode, 
                     @WebParam(name = "catOfAminoAcids")String catOfAminoAcids
-                    ) 
+                    ) throws ImproperInputEx 
     {
         if (query == null)
             query = "";
@@ -99,10 +101,11 @@ public class ProtDistWS
     }//protdist
 
     @WebMethod(operationName = "protdistDefaultParameters")
-    public util.PhylipOutput protdistDefaultParameters(
+    @WebResult(name = "jobId")
+    public String protdistDefaultParameters(
             @WebParam(name = "query") String query, 
             @WebParam(name = "model") String model
-            )            
+            ) throws ImproperInputEx, UnexpectedErrorEx            
     {
         if (query == null)
             query = "";
@@ -112,19 +115,36 @@ public class ProtDistWS
     }//protdistDefaultParameters
 
     @WebMethod(operationName = "retrieveProtDistResult")
-    public Protdist.ProteinDistOutput RetrieveProtDistResult(@WebParam(name = "jobId") String jobId)
+    @WebResult(name = "proteinDistanceMatrix")
+    public String RetrieveProtDistResult(@WebParam(name = "jobId") String jobId) 
+            throws UnexpectedErrorEx, ErrorRetrievingJob, ImproperInputEx
     {   
-        if(jobId == null)
-            jobId = "";
-        Protdist.ProteinDistOutput out  = (Protdist.ProteinDistOutput) RetrieveResults.retrieveResult(jobId);
-        return out;
+        if(jobId == null) 
+            throw new ImproperInputEx("Job Id cannot be null");
+        
+        jobId = jobId.trim();
+
+        if(jobId.equals("")) 
+            throw new ImproperInputEx("Job Id cannot be null");        
+
+
+        return RetrieveResults.retrieveProtdistResult(jobId);
+        
     }//RetrieveProtDistResult
 
     
     @WebMethod(operationName = "getStatus")
     @WebResult(name = "jobStatus")
-    public String getStatus(@WebParam(name = "jobId") String jobId)
+    public String getStatus(@WebParam(name = "jobId") String jobId) throws ImproperInputEx
     {
+        if(jobId == null) 
+            throw new ImproperInputEx("Job Id cannot be null");
+        
+        jobId = jobId.trim();
+
+        if(jobId.equals("")) 
+            throw new ImproperInputEx("Job Id cannot be null");        
+        
         return CheckJobStatus.checkStatus(jobId);
     }//getStatus
     

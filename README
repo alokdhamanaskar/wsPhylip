@@ -6,11 +6,16 @@
 
 Status : In Development
 
-Web services to wrap different phylip programs as Web services.
+Web services to wrap different Phylip programs as Web services.
+About Phylip: PHYLIP is a free package of programs for inferring phylogenies. Read more about the Phylip package on http://www.phylip.com/
 
 Programs wrapped so far.
 
-* wsPhylipProtDist : Exposes Phylip Protdist as a Web service
-	* WSDL : http://mango.ctegd.uga.edu/jkissingLab/SWS/webservices/wsPhylipProtDist.wsdl
-* wsPhylipConsense : Exposes Phylip Consense as a Web service
-	* WSDL : http://mango.ctegd.uga.edu/jkissingLab/SWS/webservices/wsPhylipConsense.wsdl
+* wsPhylipProtDist: Wraps up Phylip Protdist as a Web service
+	* WSDL: http://mango.ctegd.uga.edu/jkissingLab/SWS/webservices/wsPhylipProtDist.wsdl
+* wsPhylipConsense: Wraps up Phylip Consense as a Web service
+	* WSDL: http://mango.ctegd.uga.edu/jkissingLab/SWS/webservices/wsPhylipConsense.wsdl
+* wsPhylipProtPars: Web service that Wraps Phylip Protpars program
+	* WSDL: http://mango.ctegd.uga.edu/jkissingLab/SWS/webservices/wsPhylipProtPars.wsdl
+* wsPhylipNeighbor: Web Service that wraps Phylip Neighbor
+	* WSDL: http://mango.ctegd.uga.edu/jkissingLab/SWS/webservices/wsPhylipNeighbor.wsdl
