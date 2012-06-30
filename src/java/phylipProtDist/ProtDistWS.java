@@ -19,8 +19,8 @@ import javax.jws.WebResult;
         name            = "wsPhylipProtDist", 
         targetNamespace = "http://wsannotations.ctegd.uga.edu/services/",
         serviceName     = "wsPhylipProtDist",
-        portName        = "wsPhylipProtDistPort",
-        wsdlLocation    = "wsPhylipProtDist.wsdl"
+        portName        = "wsPhylipProtDistPort"//,
+        //wsdlLocation    = "wsPhylipProtDist.wsdl"
         )
 public class ProtDistWS
 {

@@ -7,6 +7,9 @@
     <service name="wsPhylipConsense">
       <implementation-class>phylipConsense.ConsenseWS</implementation-class>
     </service>
+    <service name="wsPhylipNeighbor">
+      <implementation-class>phylipNeighbor.NeighborWS</implementation-class>
+    </service>
   </services>
   <clients>
   </clients>

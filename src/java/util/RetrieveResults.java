@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import phylipConsense.Consense.ConsenseOutput;
 import phylipProtDist.Protdist;
 
 /**
@@ -26,7 +27,7 @@ public class RetrieveResults
         status = outcome;
         if (outcome.equalsIgnoreCase("FINISHED"))
         {
-            if (dirName.contains("PhylipConsense"))
+            if (dirName.contains("PhylipConsense") || dirName.contains("PhylipNeighbor") || dirName.contains("PhylipProtpars"))
             {
                 try
                 {
@@ -86,6 +87,7 @@ public class RetrieveResults
 
             }
 
+
         } else if (outcome.equalsIgnoreCase("ERROR"))
         {
             status = "There was an error running this job";
@@ -105,7 +107,10 @@ public class RetrieveResults
 
     public static void main(String[] args)
     {
-        System.out.println(RetrieveResults.retrieveResult("PhylipProtdist:a541013a-0d58-41d4-adcd-d7b24c22203b"));
+        ConsenseOutput o = (ConsenseOutput) RetrieveResults.retrieveResult("PhylipNeighbor:22f0a6d9-58d0-427c-b3eb-716ea16ed87d");
+        System.out.println(o.consenseTree);
+        
+        System.out.println(o.outTree);
     }//main ends
 }//Class ends
 

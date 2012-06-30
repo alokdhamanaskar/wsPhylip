@@ -7,6 +7,7 @@ import java.io.File;
  * @author Alok Dhamanaskar
  * @see    LICENSE (MIT style license file).
  * 
+ * <br/><br/> The class defines method to return the status of the Job.
  */
 public class CheckJobStatus
 {
@@ -33,7 +34,7 @@ public class CheckJobStatus
             status = "Job Not Found";
         else
         {
-            if (dirName.contains("PhylipConsense"))
+            if (dirName.contains("PhylipConsense") || dirName.contains("PhylipNeighbor") || dirName.contains("PhylipProtpars"))
             {   
                 if (exists2 == true && exists3 == true)
                     status = "FINISHED";
@@ -54,7 +55,7 @@ public class CheckJobStatus
 
     public static void main(String args[])
     {
-        System.out.println(CheckJobStatus.checkStatus("PhylipConsense:a783e97d-a86c-4a39-9895-4ff6f06365b7"));
+        System.out.println(CheckJobStatus.checkStatus("PhylipProtpars:f7dce074-f74d-4411-a955-17243d5eb4ee"));
 
     }//main
 }
